@@ -1,0 +1,26 @@
+﻿<div class="margin-5percent-allside">
+	<p>
+		<label>Nouveau mot de passe :</label>
+		<input type="password"
+			   @bind="NewPassword"
+			   @oninput="(ui => { NewPassword = ui.Value.ToString(); })" />
+	</p>
+
+	<div class="row">
+		<button @onclick="@(() => GetNewPassword.InvokeAsync(NewPassword))">Valider</button>
+		<button @onclick="@OnCancel" class="margin-10percent">Annuler</button>
+	</div>
+
+</div>
+
+
+@code {
+
+	public string NewPassword { get; set; }
+
+	[Parameter]
+	public EventCallback<string> GetNewPassword { get; set; }
+
+	[Parameter]
+	public EventCallback OnCancel { get; set; }
+}

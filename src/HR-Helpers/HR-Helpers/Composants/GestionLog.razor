@@ -1,0 +1,37 @@
+﻿@using HR_Helpers.ViewModels
+@using HR_Helpers.Models
+
+@inject IGestionLog LogGestion
+
+<h3>Gestion des logs</h3>
+
+<div class="row">
+
+	@*Liste des fichiers de logs*@
+	<div class="col hrhelpers-width_250px">
+		<u>Nom des fichiers</u>
+		<div class="hrhelpers-border">
+			@foreach (FileLog item in LogGestion.FilesLog)
+			{
+				<div @onclick="(() => LogGestion.SelectFile(item.PathFile))">
+					@item.NameFile
+				</div>
+			}
+		</div>
+	</div>
+
+	@*Visuel sur le fichier sélectionné*@
+	<div class="col hrhelpers-maxHeight500pxWithScroll">
+
+		@if (LogGestion.AllTextLogSelected != null)
+		{
+			@foreach (var line in LogGestion.AllTextLogSelected)
+			{
+				<div>
+					@line
+				</div>
+			}
+		}
+	</div>
+
+</div>

@@ -1,0 +1,27 @@
+﻿@page "/adminSetting"
+@using HR_Helpers.Composants
+@using Radzen.Blazor
+
+@attribute [Authorize(Roles = "Admin")]
+
+<h3>Accès administrateur</h3>
+
+<div class="row">
+	<RadzenTabs>
+		<Tabs>
+			<RadzenTabsItem Text="Utilisateurs" Icon="supervised_user_circle">
+				<GestionUserPage />
+			</RadzenTabsItem>
+
+			<RadzenTabsItem Text="Logs" Icon="list">
+				<GestionLog />
+			</RadzenTabsItem>
+
+		</Tabs>
+	</RadzenTabs>
+</div>
+
+
+@code {
+
+}

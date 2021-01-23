@@ -1,5 +1,7 @@
+using AccessData;
 using HR_Helpers.Areas.Identity;
 using HR_Helpers.Data;
+using HR_Helpers.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -11,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Radzen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,6 +35,7 @@ namespace HR_Helpers
 		public void ConfigureServices(IServiceCollection services)
 		{
 			string connectionDb = Configuration.GetConnectionString("MySqlConnection");
+
 			services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionDb, ServerVersion.AutoDetect(connectionDb)));
 
 			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
@@ -44,6 +48,15 @@ namespace HR_Helpers
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 			services.AddDatabaseDeveloperPageExceptionFilter();
 
+			// Service SQL de AccessData.
+			services.AddSingleton(new SqlContextAccess(connectionDb));
+
+			// Service de Radzen
+			services.AddScoped<DialogService>();
+			services.AddScoped<NotificationService>();
+
+			services.AddScoped<IUsersViewModel, UsersViewModel>();
+			services.AddScoped<IGestionLog, GestionLogViewModel>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
