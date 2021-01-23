@@ -34,7 +34,8 @@ namespace HR_Helpers
 			string connectionDb = Configuration.GetConnectionString("MySqlConnection");
 			services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionDb, ServerVersion.AutoDetect(connectionDb)));
 
-			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+				.AddRoles<IdentityRole>()
 				.AddEntityFrameworkStores<ApplicationDbContext>();
 
 			services.AddRazorPages();
@@ -42,8 +43,7 @@ namespace HR_Helpers
 
 			services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
 			services.AddDatabaseDeveloperPageExceptionFilter();
-						
-			services.AddSingleton<WeatherForecastService>();
+
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
