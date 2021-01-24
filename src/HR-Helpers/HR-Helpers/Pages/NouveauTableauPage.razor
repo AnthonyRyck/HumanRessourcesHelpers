@@ -1,0 +1,133 @@
+﻿@page "/nouveautableau"
+
+@using HR_Helpers.ViewModels
+@using HR_Helpers.Composants
+@using AccessData.Models
+@using Radzen.Blazor
+@using Radzen
+
+@inject INewTableViewModel ViewModel
+
+<h2>Création d'un nouveau tableau</h2>
+
+<AuthorizeView>
+	<NotAuthorized>
+		<div>Vous devez disposer d'un compte, où vous connecter.</div>
+		<div><a href="/Identity/Account/Register">Inscription</a></div>
+	</NotAuthorized>
+
+	<Authorized>
+		<div>
+			<div class="hr-margin-2px-top-bottom">
+				<span>Nom du tableau : <input type="text" @bind-value="ViewModel.NouveauTableau.NomDuTableau" /></span>
+			</div>
+
+			<div class="hr-margin-2px-top-bottom">
+				@*<span>Description : <input type="text" @bind-value="ViewModel.NouveauTableau.Description" /></span>*@
+				<RadzenTextArea Placeholder="Entrer une description..."
+								Style="width:400px"
+								@bind-Value="ViewModel.NouveauTableau.Description" />
+			</div>
+
+			<div class="hr-margin-2px-top-bottom">
+				Date de fin d'inscription dans le tableau :
+				<div>
+					@*<input type="datetime-local"
+				@bind-value="ViewModel.NouveauTableau.DateFinInscription" />*@
+					@*Change=@(args => OnChange(args, "DatePicker", "MM/dd/yyyy")) />*@
+
+					<RadzenDatePicker @bind-Value=ViewModel.NouveauTableau.DateFinInscription
+									  DateFormat="d" />
+				</div>
+			</div>
+
+			@*Ajout des colonnes*@
+		<div class="hr-margin-2px-top-bottom">
+			<RadzenButton Text="Ajouter une colonne"
+						  Icon="add_circle"
+						  ButtonStyle="ButtonStyle.Primary"
+						  Click="ViewModel.OnClickAddColonne" />
+		</div>
+
+			<CustomDialog Show="@ViewModel.ShowNewColonne">
+				<div class="hr-margin-5px">
+					<div>
+						<div class="hr-margin-2px-top-bottom">Nom de colonne : <input type="text" @bind-value="ViewModel.NouvelleColonne.NomColonne" /></div>
+						<div class="hr-margin-2px-top-bottom">Description : <input type="text" @bind-value="ViewModel.NouvelleColonne.Description" /></div>
+						<div class="hr-margin-2px-top-bottom">
+							Type de donnée : <select @onchange="@(e =>  ViewModel.OnChangeDataType(e))">
+								<option></option>
+								<option value="text">Texte</option>
+								<option value="datetime-local">Date</option>
+								<option value="number">Nombre</option>
+								<option value="email">Email</option>
+							</select>
+						</div>
+
+						<div>
+							<div class="hr-margin-2px-top-bottom">
+								<RadzenButton Text="Enregistrer et nouvelle colonne"
+											  Click="ViewModel.SaveAndNewColonne" />
+							</div>
+
+							<div class="hr-margin-2px-top-bottom">
+								<RadzenButton Text="Enregistrer et Terminer"
+											  ButtonStyle="ButtonStyle.Info"
+											  Click="ViewModel.CloseAndSaveNewColonne" />
+							</div>
+
+							<div class="hr-margin-2px-top-bottom">
+								<RadzenButton Text="Terminer"
+											  ButtonStyle="ButtonStyle.Light"
+											  Click="ViewModel.CloseNewColonne" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</CustomDialog>
+
+			<div class="hr-margin-2px-top-bottom">
+				<RadzenButton Text="Sauvegarder le tableau"
+							  Icon="save"
+							  ButtonStyle="ButtonStyle.Success"
+							  Click="ViewModel.CreateTable" />
+			</div>
+
+			@*Affichage des colonnes*@
+			<div class="hr-margin-2px-top-bottom">
+				@if (ViewModel.NouveauTableau.Colonnes.Count > 0)
+				{
+					<RadzenGrid @ref="ViewModel.ColonneModelGrid"
+								TItem="ColonneModel"
+								Data="@ViewModel.NouveauTableau.Colonnes">
+						<Columns>
+							<RadzenGridColumn TItem="ColonneModel"
+											  Property="NomColonne"
+											  Title="Nom de colonne" />
+
+							<RadzenGridColumn TItem="ColonneModel"
+											  Property="TypeData"
+											  Title="Type de donnée" />
+
+							<RadzenGridColumn TItem="ColonneModel"
+											  Property="Description"
+											  Title="Description" />
+						</Columns>
+					</RadzenGrid>
+				}
+				else
+				{
+					<div>
+						Aucune colonne de définie.
+					</div>
+				}
+
+			</div>
+		</div>
+
+	</Authorized>
+</AuthorizeView>
+
+@code {
+
+}

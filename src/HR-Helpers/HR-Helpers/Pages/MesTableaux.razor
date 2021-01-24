@@ -1,0 +1,38 @@
+﻿@page "/mestableaux"
+
+@using Radzen.Blazor
+@using Radzen
+@using HR_Helpers.ViewModels
+
+@inject IMesTableauxViewModel ViewModel
+
+<h3>Mes Tableaux</h3>
+
+<AuthorizeView>
+	<NotAuthorized>
+		<div>Vous devez disposer d'un compte, où vous connecter.</div>
+		<div><a href="/Identity/Account/Register">Inscription</a></div>
+	</NotAuthorized>
+
+	<Authorized>
+		<div>
+			<RadzenButton Click=@ViewModel.AddTableau
+						  Icon="add_circle"
+						  ButtonStyle="ButtonStyle.Light"
+						  Text="Nouveau tableau" />
+		</div>
+
+		<div>
+			Voici vos tableaux :
+
+			<div>
+
+			</div>
+		</div>
+
+	</Authorized>
+</AuthorizeView>
+
+@code {
+
+}

@@ -1,6 +1,7 @@
 using AccessData;
 using HR_Helpers.Areas.Identity;
 using HR_Helpers.Data;
+using HR_Helpers.Services;
 using HR_Helpers.ViewModels;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
@@ -54,9 +55,17 @@ namespace HR_Helpers
 			// Service de Radzen
 			services.AddScoped<DialogService>();
 			services.AddScoped<NotificationService>();
+			services.AddScoped<TooltipService>();
+			services.AddScoped<ContextMenuService>();
+
+			services.AddHttpContextAccessor();
+			services.AddScoped<CurrentUserService>();
+			services.AddScoped<IDataAccess, DataService>();
 
 			services.AddScoped<IUsersViewModel, UsersViewModel>();
 			services.AddScoped<IGestionLog, GestionLogViewModel>();
+			services.AddScoped<IMesTableauxViewModel, MesTableauxViewModel>();
+			services.AddScoped<INewTableViewModel, NewTableViewModel>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
