@@ -51,9 +51,17 @@ namespace HR_Helpers.Data
 		}
 
 		///<inheritdoc cref="IDataAccess.GetTable(string)"/>
-		public Task<Tableau> GetTable(string idTableau)
+		public async Task<Tableau> GetTable(string idTableau)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				return await _sqlContext.GetTableau(idTableau);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur récupération du tableau : " + idTableau);
+				throw;
+			}
 		}
 
 		///<inheritdoc cref="IDataAccess.SaveData(List{ValueColonne})"/>
@@ -72,6 +80,20 @@ namespace HR_Helpers.Data
 		public async Task SaveNewTable(Tableau nouveauTableau)
 		{
 			await _sqlContext.AddTableau(nouveauTableau);
+		}
+
+		/// <see cref="IDataAccess.GetValeurs(string, string)"/>
+		public async Task<List<List<ValueColonne>>> GetValeurs(string idTableau, string userId)
+		{
+			try
+			{
+				return await _sqlContext.GetValeurs(idTableau, userId);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur récupération des valeurs - IdTableau:" + idTableau + " - userId:"+ userId);
+				throw;
+			}
 		}
 
 		#endregion

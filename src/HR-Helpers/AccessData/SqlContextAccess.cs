@@ -71,11 +71,85 @@ namespace AccessData
             }
         }
 
-        /// <summary>
-        /// Charge tous les tableaux d'un utilisateur.
-        /// </summary>
-        /// <param name="idUser"></param>
-        /// <returns></returns>
+		public async Task<Tableau> GetTableau(string idTableau)
+		{
+
+            var commandSelectTableau = @"SELECT IdTableau, IdUser, NomTableau, DescriptionTable, DateFinInscription "
+                               + "FROM tableau "
+                               + $"WHERE IdTableau='{idTableau}';";
+
+            // Chargement de l'objet Tableau
+            Func<MySqlCommand, Task<Tableau>> funcCmd = async (cmd) =>
+            {
+                Tableau tableauResult = null;
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (reader.Read())
+                    {
+                        tableauResult = new Tableau()
+                        {
+                            IdTableau = new Guid(reader.GetString(0)),
+                            IdUser = reader.GetString(1),
+                            NomDuTableau = reader.GetString(2),
+                            Description = reader.GetString(3),
+                            DateFinInscription = reader.GetDateTime(4)
+                        };
+                    }
+                }
+
+                return tableauResult;
+            };
+
+            // Chargement des colonnes pour ce tableau
+            var commandColonnes = @"SELECT col.IdColonne, col.NomColonne, col.DescriptionColonne, col.TypeData "
+                                    + "FROM colonne col "
+                                    + $"WHERE col.TableId='{idTableau}';";
+            Func<MySqlCommand, Task<List<ColonneModel>>> funcCmdColonne = async (cmd) =>
+            {
+                List<ColonneModel> colonnes = new List<ColonneModel>();
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (reader.Read())
+                    {
+                        var colonne = new ColonneModel()
+                        {
+                            IdColonne = reader.GetInt32(0),
+                            NomColonne = reader.GetString(1),
+                            Description = reader.GetString(2),
+                            TypeData = reader.GetString(3),
+                            TableId = new Guid(idTableau)                            
+                        };
+
+                        colonnes.Add(colonne);
+                    }
+                }
+
+                return colonnes;
+            };
+
+
+            try
+            {
+                var tableau = await GetCoreAsync<Tableau>(commandSelectTableau, funcCmd);
+                var colonnes = await GetCoreAsync<List<ColonneModel>>(commandColonnes, funcCmdColonne);
+
+                tableau.Colonnes = colonnes;
+
+                return tableau;
+            }
+            catch (Exception ex)
+            {
+                var exs = ex.Message;
+                throw;
+            }
+        }
+
+		/// <summary>
+		/// Charge tous les tableaux d'un utilisateur.
+		/// </summary>
+		/// <param name="idUser"></param>
+		/// <returns></returns>
 		public async Task<IEnumerable<Tableau>> GetTableauByUser(string idUser)
 		{
             var commandText = @"SELECT IdTableau, IdUser, NomTableau, DescriptionTable, DateFinInscription "
@@ -119,12 +193,65 @@ namespace AccessData
             return tableaux;
         }
 
-		#endregion
+        #endregion
+
+        #region Valeurs
+
+        /// <summary>
+        /// Récupère les valeurs pour le tableau et l'utilisateur.
+        /// </summary>
+        /// <param name="idTableau"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<List<List<ValueColonne>>> GetValeurs(string idTableau, string userId)
+        {
+            var commandText = @"SELECT IdTableau, IdUser, NomTableau, DescriptionTable, DateFinInscription "
+                                + "FROM tableau "
+                                + $"WHERE IdUser='{userId}';";
+
+            //Func<MySqlCommand, Task<List<List<ValueColonne>>>> funcCmd = async (cmd) =>
+            //{
+            //    List<List<ValueColonne>> valeurs = new List<List<ValueColonne>>();
+            //    using (var reader = await cmd.ExecuteReaderAsync())
+            //    {
+            //        while (reader.Read())
+            //        {
+            //            var tableau = new Tableau()
+            //            {
+            //                IdTableau = new Guid(reader.GetString(0)),
+            //                IdUser = reader.GetString(1),
+            //                NomDuTableau = reader.GetString(2),
+            //                Description = reader.GetString(3),
+            //                DateFinInscription = reader.GetDateTime(4)
+            //            };
+
+            //            //valeurs.Add(tableau);
+            //        }
+            //    }
+
+            //    return valeurs;
+            //};
+
+            List<List<ValueColonne>> result = new List<List<ValueColonne>>();
+
+            try
+            {
+                //result = await GetCoreAsync(commandText, funcCmd);
+            }
+            catch (Exception ex)
+            {
+                var exs = ex.Message;
+            }
+
+            return result;
+        }
+
+        #endregion
 
 
-		#region Private Methods
+        #region Private Methods
 
-		private async Task<List<T>> GetCoreAsync<T>(string commandSql, Func<MySqlCommand, Task<List<T>>> func)
+        private async Task<List<T>> GetCoreAsync<T>(string commandSql, Func<MySqlCommand, Task<List<T>>> func)
             where T : new()
         {
             List<T> result = new List<T>();

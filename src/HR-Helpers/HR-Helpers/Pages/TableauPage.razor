@@ -1,10 +1,115 @@
 ﻿@page "/tableau/{IdTableau}"
 
-<h3>TableauPage</h3>
+@using HR_Helpers.ViewModels
+@using AccessData.Models
+@using HR_Helpers.Composants 
+
+@inject ITableauViewModel ViewModel
+
+<h3>Tableau</h3>
+
+@if (ViewModel.TableauSelected != null)
+{
+	<RadzenCard>
+		<div>
+			<div><u>Nom du tableau</u> : </div>
+			<div>@ViewModel.TableauSelected.NomDuTableau</div>
+
+			<div><u>Description</u> : </div>
+			<div>@ViewModel.TableauSelected.Description</div>
+
+			<div><u>Date de fin d'inscription</u> : </div>
+			<div>@ViewModel.TableauSelected.DateFinInscription.ToString("d")</div>
+		</div>
+
+		<div>
+			<RadzenButton Text="Ajouter des valeurs"
+						Click="ViewModel.OpenDialog"/>
+		</div>
+	</RadzenCard>
+
+	<div>
+		<CustomDialog Show="ViewModel.ShowNouvelleEntree">
+			<div>
+				@foreach (var item in ViewModel.TableauSelected.Colonnes)
+				{
+					<div>
+						<span><u>@item.NomColonne</u> : <input type="@item.TypeData" @bind-value="ViewModel.GetValueColonne(item.IdColonne).Value" /> </span>
+					</div>
+				}
+			</div>
+
+			<div>
+				@*<button @onclick="ViewModel.SaveData">Valider et nouvelle entrée</button>
+				<button @onclick="ViewModel.OnCloseData">Terminer</button>*@
+			</div>
+		</CustomDialog>
+	</div>
+
+
+	<div>
+		@*<RadzenGrid @ref="ViewModel.ColonneModelGrid"
+						TItem="ColonneModel"
+						Data="@ViewModel.TableauSelected.Colonnes">
+				<Columns>
+					<RadzenGridColumn TItem="ColonneModel"
+									  Property="NomColonne"
+									  Title="Nom de colonne" />
+
+					<RadzenGridColumn TItem="ColonneModel"
+									  Property="TypeData"
+									  Title="Type de donnée" />
+
+					<RadzenGridColumn TItem="ColonneModel"
+									  Property="Description"
+									  Title="Description" />
+				</Columns>
+			</RadzenGrid>*@
+
+
+		<table class="table">
+			<thead>
+				<tr>
+					@foreach (var colonne in ViewModel.TableauSelected.Colonnes)
+					{
+						<th>@colonne.NomColonne</th>
+					}
+				</tr>
+			</thead>
+
+			<tbody>
+				@foreach (var data in ViewModel.ToutesLesEntrees)
+				{
+					<tr>
+						@foreach (var item in data)
+						{
+							<td>@item.Value</td>
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+}
+else
+{
+	<div>Chargement des informations du tableau.</div>
+}
+
 
 @code {
 
 	[Parameter]
 	public string IdTableau { get; set; }
 
+
+	//protected override void OnParametersSet()
+	//{
+	//}
+
+	protected async override Task OnParametersSetAsync()
+	{
+		await ViewModel.LoadTableau(IdTableau);
+	}
 }

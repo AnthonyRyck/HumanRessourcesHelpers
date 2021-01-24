@@ -66,6 +66,7 @@ namespace HR_Helpers
 			services.AddScoped<IGestionLog, GestionLogViewModel>();
 			services.AddScoped<IMesTableauxViewModel, MesTableauxViewModel>();
 			services.AddScoped<INewTableViewModel, NewTableViewModel>();
+			services.AddScoped<ITableauViewModel, TableauViewModel>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
