@@ -40,31 +40,26 @@
 			</div>
 
 			<div>
-				@*<button @onclick="ViewModel.SaveData">Valider et nouvelle entrée</button>
-				<button @onclick="ViewModel.OnCloseData">Terminer</button>*@
+				<button @onclick="ViewModel.SaveData">Enregistrer et nouvelle entrée</button>
+				<button @onclick="ViewModel.SaveAndClose">Enregistrer et Terminer</button>
+				<button @onclick="ViewModel.OnCloseData">Fermer</button>
 			</div>
 		</CustomDialog>
 	</div>
-
 
 	<div>
 		@*<RadzenGrid @ref="ViewModel.ColonneModelGrid"
 						TItem="ColonneModel"
 						Data="@ViewModel.TableauSelected.Colonnes">
-				<Columns>
-					<RadzenGridColumn TItem="ColonneModel"
-									  Property="NomColonne"
-									  Title="Nom de colonne" />
-
-					<RadzenGridColumn TItem="ColonneModel"
-									  Property="TypeData"
-									  Title="Type de donnée" />
-
-					<RadzenGridColumn TItem="ColonneModel"
-									  Property="Description"
-									  Title="Description" />
-				</Columns>
-			</RadzenGrid>*@
+			<Columns>
+				@foreach (var colonne in ViewModel.TableauSelected.Colonnes)
+				{
+						<RadzenGridColumn TItem="ValueColonne"
+									  Title="@colonne.NomColonne"
+									  Property="Value" />
+				}
+			</Columns>
+		</RadzenGrid>*@
 
 
 		<table class="table">

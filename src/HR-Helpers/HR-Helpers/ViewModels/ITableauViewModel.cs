@@ -50,5 +50,15 @@ namespace HR_Helpers.ViewModels
 		/// Permet d'ouvrir le Dialog
 		/// </summary>
 		void OpenDialog();
+
+		/// <summary>
+		/// Permet de fermer le Dialog
+		/// </summary>
+		void OnCloseData();
+
+		/// <summary>
+		/// Enregistre une nouvelle valeur et ferme le dialog
+		/// </summary>
+		void SaveAndClose();
 	}
 }

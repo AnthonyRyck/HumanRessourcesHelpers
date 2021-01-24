@@ -57,6 +57,17 @@ namespace HR_Helpers.ViewModels
 			ShowNouvelleEntree = true;
 		}
 
+		public void OnCloseData()
+		{
+			ShowNouvelleEntree = false;
+		}
+
+		public void SaveAndClose()
+		{
+
+
+			ShowNouvelleEntree = false;
+		}
 
 
 		private void InitNewData()
