@@ -71,12 +71,60 @@ namespace AccessData
             }
         }
 
-        #endregion
+        /// <summary>
+        /// Charge tous les tableaux d'un utilisateur.
+        /// </summary>
+        /// <param name="idUser"></param>
+        /// <returns></returns>
+		public async Task<IEnumerable<Tableau>> GetTableauByUser(string idUser)
+		{
+            var commandText = @"SELECT IdTableau, IdUser, NomTableau, DescriptionTable, DateFinInscription "
+                                + "FROM tableau "
+                                + $"WHERE IdUser='{idUser}';";
+
+            Func<MySqlCommand, Task<List<Tableau>>> funcCmd = async (cmd) =>
+            {
+                List<Tableau> tableaux = new List<Tableau>();
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (reader.Read())
+                    {
+                        var tableau = new Tableau()
+                        {
+                            IdTableau = new Guid(reader.GetString(0)),
+                            IdUser = reader.GetString(1),
+                            NomDuTableau = reader.GetString(2),
+                            Description = reader.GetString(3),
+                            DateFinInscription = reader.GetDateTime(4)
+                        };
+
+                        tableaux.Add(tableau);
+                    }
+                }
+
+                return tableaux;
+            };
+
+            List<Tableau> tableaux = new List<Tableau>();
+
+            try
+            {
+                tableaux = await GetCoreAsync(commandText, funcCmd);
+            }
+            catch (Exception ex)
+            {
+                var exs = ex.Message;
+            }
+
+            return tableaux;
+        }
+
+		#endregion
 
 
-        #region Private Methods
+		#region Private Methods
 
-        private async Task<List<T>> GetCoreAsync<T>(string commandSql, Func<MySqlCommand, Task<List<T>>> func)
+		private async Task<List<T>> GetCoreAsync<T>(string commandSql, Func<MySqlCommand, Task<List<T>>> func)
             where T : new()
         {
             List<T> result = new List<T>();

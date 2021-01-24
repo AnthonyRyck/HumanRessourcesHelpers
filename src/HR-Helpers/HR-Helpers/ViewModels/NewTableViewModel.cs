@@ -32,9 +32,12 @@ namespace HR_Helpers.ViewModels
 		private string _saveValueType;
 		private NotificationService _notificationService;
 
+		private NavigationManager _navigationManager;
+
 		#endregion
 
-		public NewTableViewModel(CurrentUserService userService, IDataAccess dataAccess, NotificationService notification)
+		public NewTableViewModel(CurrentUserService userService, IDataAccess dataAccess, 
+			NotificationService notification, NavigationManager navigationManager)
 		{
 			NouveauTableau = new Tableau();
 			NouvelleColonne = new ColonneModel();
@@ -45,11 +48,11 @@ namespace HR_Helpers.ViewModels
 			CurrentUserService = userService;
 			DataService = dataAccess;
 			_notificationService = notification;
+
+			_navigationManager = navigationManager;
 		}
 
 		#region Public Methods
-
-		
 
 		public async Task CreateTable()
 		{
@@ -66,6 +69,8 @@ namespace HR_Helpers.ViewModels
 					Duration = 4000
 				};
 				_notificationService.Notify(message);
+
+				_navigationManager.NavigateTo("/mestableaux", true);
 			}
 			catch (Exception ex)
 			{

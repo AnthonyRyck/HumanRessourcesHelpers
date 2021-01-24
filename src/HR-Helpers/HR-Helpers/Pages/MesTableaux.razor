@@ -23,11 +23,52 @@
 		</div>
 
 		<div>
-			Voici vos tableaux :
+			<h3>Vos tableaux :</h3>
+		</div>
+		<div class="hr-flex">
 
-			<div>
+			@if (ViewModel.TousMesTableau == null)
+			{
+				<div>Chargement de vos tableaux en cours ...</div>
+			}
+			else
+			{
+				@foreach (var tableau in ViewModel.TousMesTableau)
+				{
+					<div class="hr-grow" @onclick="(arg => ViewModel.OpenThisTableau(tableau.IdTableau.ToString()))">
+						<RadzenCard Style="width:250px; margin: 10px; height:200px;">
+							<div>
+								<div>
+									<u>Nom du tableau</u>
+								</div>
+								<div>
+									@tableau.NomDuTableau
+								</div>
+							</div>
 
-			</div>
+							<div>
+								<div>
+									<u>Description</u>
+								</div>
+								<div>
+									<div>
+										@tableau.Description
+									</div>
+								</div>
+							</div>
+
+							<div>
+								<div>
+									<u>Date de fin de saisie</u>
+								</div>
+								<div>
+									@tableau.DateFinInscription.ToString("d")
+								</div>
+							</div>
+						</RadzenCard>
+					</div>
+				}
+			}
 		</div>
 
 	</Authorized>

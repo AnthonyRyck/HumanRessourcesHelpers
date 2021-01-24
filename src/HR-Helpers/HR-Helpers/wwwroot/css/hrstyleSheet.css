@@ -22,6 +22,18 @@
 	margin-bottom: 2px;
 }
 
+.hr-flex {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.hr-grow {
+	transition: all .2s ease-in-out;
+}
+
+.hr-grow:hover {
+	transform: scale(1.1);
+}
 
 /*Pour legend customDialog*/
 .hr-dialog-container {
