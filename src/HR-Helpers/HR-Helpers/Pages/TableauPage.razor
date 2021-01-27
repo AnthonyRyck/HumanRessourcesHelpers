@@ -40,7 +40,7 @@
 			</div>
 
 			<div>
-				<button @onclick="ViewModel.SaveData">Enregistrer et nouvelle entrée</button>
+				<button @onclick="ViewModel.SaveAndNewData">Enregistrer et nouvelle entrée</button>
 				<button @onclick="ViewModel.SaveAndClose">Enregistrer et Terminer</button>
 				<button @onclick="ViewModel.OnCloseData">Fermer</button>
 			</div>
@@ -48,20 +48,6 @@
 	</div>
 
 	<div>
-		@*<RadzenGrid @ref="ViewModel.ColonneModelGrid"
-						TItem="ColonneModel"
-						Data="@ViewModel.TableauSelected.Colonnes">
-			<Columns>
-				@foreach (var colonne in ViewModel.TableauSelected.Colonnes)
-				{
-						<RadzenGridColumn TItem="ValueColonne"
-									  Title="@colonne.NomColonne"
-									  Property="Value" />
-				}
-			</Columns>
-		</RadzenGrid>*@
-
-
 		<table class="table">
 			<thead>
 				<tr>
@@ -97,11 +83,6 @@ else
 
 	[Parameter]
 	public string IdTableau { get; set; }
-
-
-	//protected override void OnParametersSet()
-	//{
-	//}
 
 	protected async override Task OnParametersSetAsync()
 	{

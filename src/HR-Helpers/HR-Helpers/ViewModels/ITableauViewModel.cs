@@ -60,5 +60,10 @@ namespace HR_Helpers.ViewModels
 		/// Enregistre une nouvelle valeur et ferme le dialog
 		/// </summary>
 		void SaveAndClose();
+
+		/// <summary>
+		/// Enregistre une nouvelle valeur et propose une autre.
+		/// </summary>
+		Task SaveAndNewData();
 	}
 }

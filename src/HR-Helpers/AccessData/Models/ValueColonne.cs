@@ -8,6 +8,8 @@ namespace AccessData.Models
 	{
 		public Guid IdTableau { get; set; }
 
+		public int NumeroLigne { get; set; }
+
 		public int IdColonne { get; set; }
 
 		public string IdUser { get; set; }

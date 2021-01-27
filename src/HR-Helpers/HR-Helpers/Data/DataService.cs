@@ -65,9 +65,17 @@ namespace HR_Helpers.Data
 		}
 
 		///<inheritdoc cref="IDataAccess.SaveData(List{ValueColonne})"/>
-		public Task SaveData(List<ValueColonne> valeurs)
+		public async Task SaveData(List<ValueColonne> valeurs)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				await _sqlContext.AddValeurs(valeurs);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur savegarde d'une ligne de valeur.");
+				throw;
+			}
 		}
 
 		///<inheritdoc cref="IDataAccess.SaveData(List{List{ValueColonne}})"/>

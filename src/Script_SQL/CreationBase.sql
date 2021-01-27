@@ -19,12 +19,11 @@ PRIMARY KEY(IdColonne,TableId),
 FOREIGN KEY(TableId) REFERENCES Tableau(IdTableau));
 
 CREATE TABLE Valeur
-(ColonneId INT NOT NULL, 
+(NumeroLigne INT NOT NULL,
+ColonneId INT NOT NULL, 
 TableId VARCHAR(255) NOT NULL,
 UserId VARCHAR(255) NOT NULL,  
 Valeur VARCHAR(255) NOT NULL,
-DescriptionColonne VARCHAR(250),
-TypeData VARCHAR(30),
-PRIMARY KEY(ColonneId,TableId),
+PRIMARY KEY(NumeroLigne, ColonneId,TableId, UserId),
 FOREIGN KEY(TableId) REFERENCES Tableau(IdTableau),
 FOREIGN KEY(ColonneId) REFERENCES Colonne(IdColonne));

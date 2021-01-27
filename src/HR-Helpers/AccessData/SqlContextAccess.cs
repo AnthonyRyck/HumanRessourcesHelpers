@@ -18,6 +18,11 @@ namespace AccessData
 
 		#region Tableau
 
+        /// <summary>
+        /// Créé un nouveau tableau.
+        /// </summary>
+        /// <param name="nouveauTableau"></param>
+        /// <returns></returns>
 		public async Task AddTableau(Tableau nouveauTableau)
 		{
             try
@@ -71,6 +76,11 @@ namespace AccessData
             }
         }
 
+        /// <summary>
+        /// Charge le tableau avec l'ID donné en paramètre.
+        /// </summary>
+        /// <param name="idTableau"></param>
+        /// <returns></returns>
 		public async Task<Tableau> GetTableau(string idTableau)
 		{
 
@@ -205,38 +215,62 @@ namespace AccessData
         /// <returns></returns>
         public async Task<List<List<ValueColonne>>> GetValeurs(string idTableau, string userId)
         {
-            var commandText = @"SELECT IdTableau, IdUser, NomTableau, DescriptionTable, DateFinInscription "
-                                + "FROM tableau "
-                                + $"WHERE IdUser='{userId}';";
+            var commandText = @"SELECT NumeroLigne, ColonneId, TableId, UserId, Valeur "
+                                + "FROM valeur "
+                                + $"WHERE UserId='{userId}' " 
+                                + $"AND TableId='{idTableau}' " 
+                                + $"ORDER BY NumeroLigne, ColonneId;";
 
-            //Func<MySqlCommand, Task<List<List<ValueColonne>>>> funcCmd = async (cmd) =>
-            //{
-            //    List<List<ValueColonne>> valeurs = new List<List<ValueColonne>>();
-            //    using (var reader = await cmd.ExecuteReaderAsync())
-            //    {
-            //        while (reader.Read())
-            //        {
-            //            var tableau = new Tableau()
-            //            {
-            //                IdTableau = new Guid(reader.GetString(0)),
-            //                IdUser = reader.GetString(1),
-            //                NomDuTableau = reader.GetString(2),
-            //                Description = reader.GetString(3),
-            //                DateFinInscription = reader.GetDateTime(4)
-            //            };
+            Func<MySqlCommand, Task<List<List<ValueColonne>>>> funcCmd = async (cmd) =>
+            {
+                List<List<ValueColonne>> toutesLesLignes = new List<List<ValueColonne>>();
 
-            //            //valeurs.Add(tableau);
-            //        }
-            //    }
+                List<ValueColonne> uneLigne = new List<ValueColonne>();
 
-            //    return valeurs;
-            //};
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    int numeroLigne = 0;
+
+                    while (reader.Read())
+                    {
+                        var valeur = new ValueColonne()
+                        {
+                            NumeroLigne = reader.GetInt32(0),
+                            IdColonne = reader.GetInt32(1),
+                            IdTableau = new Guid(reader.GetString(2)),
+                            IdUser = reader.GetString(3),
+                            Value = reader.GetString(4)
+                        };
+
+                        if(numeroLigne == 0 || numeroLigne == valeur.NumeroLigne)
+						{
+                            uneLigne.Add(valeur);
+                        }
+                        else
+						{
+                            // Ajout la collection de la ligne X
+                            toutesLesLignes.Add(uneLigne);
+
+                            // Renouvelle pour la ligne Y
+                            uneLigne = new List<ValueColonne>();
+                            uneLigne.Add(valeur);
+                        }
+
+                        numeroLigne = valeur.NumeroLigne;
+                    }
+
+                    // Comme pas d'autre numéro de ligne, j'ajoute les enregistrements.
+                    toutesLesLignes.Add(uneLigne);
+                }
+
+                return toutesLesLignes;
+            };
 
             List<List<ValueColonne>> result = new List<List<ValueColonne>>();
 
             try
             {
-                //result = await GetCoreAsync(commandText, funcCmd);
+                result = await GetCoreAsync(commandText, funcCmd);
             }
             catch (Exception ex)
             {
@@ -244,6 +278,65 @@ namespace AccessData
             }
 
             return result;
+        }
+
+
+        /// <summary>
+        /// Ajoute une nouvelle ligne de valeur pour un tableau
+        /// </summary>
+        /// <param name="valeurs"></param>
+        /// <returns></returns>
+        public async Task AddValeurs(List<ValueColonne> valeurs)
+        {
+			try
+			{
+                using (var conn = new MySqlConnection(ConnectionString))
+                {
+                    //// Création du Tableau
+                    //string command = "INSERT INTO valeur (ColonneId, TableId, UserId, Valeur)"
+                    //            + " VALUES (@colonneId, @tableId, @userId, @valeur);";
+
+                    //using (var cmd = new MySqlCommand(command, conn))
+                    //{
+                    //    cmd.Parameters.AddWithValue("@colonneId", nouveauTableau.IdTableau);
+                    //    cmd.Parameters.AddWithValue("@tableId", nouveauTableau.IdUser);
+                    //    cmd.Parameters.AddWithValue("@userId", nouveauTableau.NomDuTableau);
+                    //    cmd.Parameters.AddWithValue("@valeur", nouveauTableau.Description);
+
+                    //    conn.Open();
+                    //    int result = await cmd.ExecuteNonQueryAsync();
+                    //    conn.Close();
+                    //}
+
+                    // Insertion des valeurs
+                    int maxLine = valeurs.Count;
+                    string commandInsertValeur = "INSERT INTO valeur (NumeroLigne, ColonneId, TableId, UserId, Valeur) VALUES ";
+                    for (int i = 0; i < maxLine; i++)
+                    {
+                        commandInsertValeur += $"({valeurs[i].NumeroLigne}" +
+                                                $", {valeurs[i].IdColonne}" +
+                                                $", '{valeurs[i].IdTableau}'" +
+                                                $", '{valeurs[i].IdUser}'" +
+                                                $", '{valeurs[i].Value}')";
+
+                        if (i < (maxLine - 1))
+                            commandInsertValeur += ", ";
+                    }
+                    commandInsertValeur += ";";
+
+                    using (var cmd = new MySqlCommand(commandInsertValeur, conn))
+                    {
+                        conn.Open();
+                        await cmd.ExecuteNonQueryAsync();
+                        conn.Close();
+                    }
+                }
+            }
+			catch (Exception ex)
+			{
+
+				throw;
+			}
         }
 
         #endregion
