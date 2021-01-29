@@ -53,6 +53,12 @@ namespace HR_Helpers.Data
 
 		
 		Task SaveData(List<List<ValueColonne>> valeurs);
-		
+
+		/// <summary>
+		/// Permet la suppression du tableau et des valeurs associées.
+		/// </summary>
+		/// <param name="idTableau"></param>
+		/// <returns></returns>
+		Task DeleteTableau(Guid idTableau);
 	}
 }

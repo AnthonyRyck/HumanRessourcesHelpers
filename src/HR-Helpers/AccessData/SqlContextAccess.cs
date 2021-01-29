@@ -77,11 +77,34 @@ namespace AccessData
         }
 
         /// <summary>
+        /// Supprime le tableau et les valeurs associés.
+        /// </summary>
+        /// <param name="idTableau"></param>
+        /// <returns></returns>
+		public async Task DeleteTableau(Guid idTableau)
+		{
+            // Suppression des valeurs
+            string commandDeleteValeur = $"DELETE FROM valeur "
+                                        + $"WHERE TableId='{idTableau.ToString()}';";
+            await ExecuteCoreAsync(commandDeleteValeur);
+
+            // Suppression des colonnes
+            string commandDeleteColonne = $"DELETE FROM colonne "
+                                        + $"WHERE TableId='{idTableau.ToString()}';";
+            await ExecuteCoreAsync(commandDeleteColonne);
+
+            // Suppression de tableau
+            string commandDeleteTableau = $"DELETE FROM tableau "
+                                        + $"WHERE IdTableau='{idTableau.ToString()}';";
+            await ExecuteCoreAsync(commandDeleteTableau);
+        }
+
+        /// <summary>
         /// Charge le tableau avec l'ID donné en paramètre.
         /// </summary>
         /// <param name="idTableau"></param>
         /// <returns></returns>
-		public async Task<Tableau> GetTableau(string idTableau)
+        public async Task<Tableau> GetTableau(string idTableau)
 		{
 
             var commandSelectTableau = @"SELECT IdTableau, IdUser, NomTableau, DescriptionTable, DateFinInscription "

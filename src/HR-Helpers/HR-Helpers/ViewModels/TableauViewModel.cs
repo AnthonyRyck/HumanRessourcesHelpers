@@ -34,6 +34,7 @@ namespace HR_Helpers.ViewModels
 		private CurrentUserService CurrentUserService;
 		private NotificationService _notificationService;
 		private IBlazorDownloadFileService DownloadFileService;
+		private NavigationManager NavigationManager;
 
 		/// <see cref="ITableauViewModel.IsUserProprietaire"/>
 		public bool IsUserProprietaire { get; set; }
@@ -48,12 +49,16 @@ namespace HR_Helpers.ViewModels
 
 		#region Constructeur
 
-		public TableauViewModel(IDataAccess dataAccess, CurrentUserService currentUser, NotificationService notificationSvc, IBlazorDownloadFileService blazorDownloadFileService)
+		public TableauViewModel(IDataAccess dataAccess, CurrentUserService currentUser, 
+			NotificationService notificationSvc, IBlazorDownloadFileService blazorDownloadFileService,
+			NavigationManager navigationManager)
 		{
 			DataAccess = dataAccess;
 			CurrentUserService = currentUser;
 			_notificationService = notificationSvc;
 			DownloadFileService = blazorDownloadFileService;
+
+			NavigationManager = navigationManager;
 		}
 
 		#endregion
@@ -79,6 +84,15 @@ namespace HR_Helpers.ViewModels
 			NumeroLigne = GetLastLineNumber();
 
 			InitNewData();
+		}
+
+		/// <see cref="ITableauViewModel.DeleteTableau"/>
+		public async Task DeleteTableau()
+		{
+			await DataAccess.DeleteTableau(TableauSelected.IdTableau);
+
+			// Revenir à la page des tableaux
+			NavigationManager.NavigateTo("/mestableaux", true);
 		}
 
 		/// <see cref="ITableauViewModel.GetValueColonne(int)"/>
@@ -169,6 +183,13 @@ namespace HR_Helpers.ViewModels
 				_notificationService.Notify(NotificationSeverity.Error, "Erreur", errorMsg, 3000);
 			}
 		}
+
+
+
+
+		#endregion
+
+		#region Private Methods
 
 		/// <summary>
 		/// Crée les colonnes dans la feuille Excel
@@ -290,10 +311,6 @@ namespace HR_Helpers.ViewModels
 					return "AA";
 			}
 		}
-
-		#endregion
-
-		#region Private Methods
 
 		/// <summary>
 		/// Réinitialise "ValeursSaisies" pour une nouvelle entrée.

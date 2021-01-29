@@ -82,6 +82,10 @@ namespace HR_Helpers.ViewModels
 		/// <returns></returns>
 		Task ExportToExcel();
 
-		
+		/// <summary>
+		/// Supprime toutes les données du tableau
+		/// </summary>
+		/// <returns></returns>
+		Task DeleteTableau();
 	}
 }

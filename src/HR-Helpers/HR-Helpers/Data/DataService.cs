@@ -106,6 +106,20 @@ namespace HR_Helpers.Data
 			}
 		}
 
+		/// <see cref="IDataAccess.DeleteTableau(Guid)"/>
+		public async Task DeleteTableau(Guid idTableau)
+		{
+			try
+			{
+				await _sqlContext.DeleteTableau(idTableau);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur sur la suppression du tableau - IdTableau:" + idTableau.ToString());
+				throw;
+			}
+		}
+
 		#endregion
 
 	}
