@@ -65,5 +65,11 @@ namespace HR_Helpers.ViewModels
 		/// Enregistre une nouvelle valeur et propose une autre.
 		/// </summary>
 		Task SaveAndNewData();
+
+		/// <summary>
+		/// Exporte les valeurs vers Excels
+		/// </summary>
+		/// <returns></returns>
+		Task ExportToExcel();
 	}
 }

@@ -22,12 +22,16 @@
 			<div>@ViewModel.TableauSelected.DateFinInscription.ToString("d")</div>
 		</div>
 
-		<div>
+		<div class="row">
 			<RadzenButton Text="Ajouter des valeurs"
-						Click="ViewModel.OpenDialog"/>
+						  Click="ViewModel.OpenDialog" />
+
+			<RadzenButton Text="Export en Excel"
+						  Click="ViewModel.ExportToExcel" />
 		</div>
 	</RadzenCard>
 
+	//Affichage de la boite de dialog  pour ajouter une entrée
 	<div>
 		<CustomDialog Show="ViewModel.ShowNouvelleEntree">
 			<div>
@@ -47,6 +51,7 @@
 		</CustomDialog>
 	</div>
 
+	// Tableau contenant toutes les entrées
 	<div>
 		<table class="table">
 			<thead>

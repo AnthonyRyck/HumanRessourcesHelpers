@@ -1,4 +1,5 @@
 using AccessData;
+using BlazorDownloadFile;
 using HR_Helpers.Areas.Identity;
 using HR_Helpers.Data;
 using HR_Helpers.Services;
@@ -57,6 +58,9 @@ namespace HR_Helpers
 			services.AddScoped<NotificationService>();
 			services.AddScoped<TooltipService>();
 			services.AddScoped<ContextMenuService>();
+
+			// Pour téléchargement de fichier.
+			services.AddBlazorDownloadFile();
 
 			services.AddHttpContextAccessor();
 			services.AddScoped<CurrentUserService>();
