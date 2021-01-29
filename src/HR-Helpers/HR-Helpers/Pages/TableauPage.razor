@@ -24,9 +24,12 @@
 
 		<div class="row">
 			<RadzenButton Text="Ajouter des valeurs"
+							ButtonStyle="ButtonStyle.Info"
 						  Click="ViewModel.OpenDialog" />
 
 			<RadzenButton Text="Export en Excel"
+							class="hr-margin-5px-left"
+							ButtonStyle="ButtonStyle.Light"
 						  Click="ViewModel.ExportToExcel" />
 		</div>
 	</RadzenCard>
@@ -34,19 +37,21 @@
 	//Affichage de la boite de dialog  pour ajouter une entrée
 	<div>
 		<CustomDialog Show="ViewModel.ShowNouvelleEntree">
-			<div>
-				@foreach (var item in ViewModel.TableauSelected.Colonnes)
-				{
-					<div>
-						<span><u>@item.NomColonne</u> : <input type="@item.TypeData" @bind-value="ViewModel.GetValueColonne(item.IdColonne).Value" /> </span>
-					</div>
-				}
-			</div>
+			<div class="hr-margin-5px">
+				<div>
+					@foreach (var item in ViewModel.TableauSelected.Colonnes)
+					{
+						<div class="hr-margin-2px-top-bottom">
+							<span><u>@item.NomColonne</u> : <input type="@item.TypeData" @bind-value="ViewModel.GetValueColonne(item.IdColonne).Value" /> </span>
+						</div>
+					}
+				</div>
 
-			<div>
-				<button @onclick="ViewModel.SaveAndNewData">Enregistrer et nouvelle entrée</button>
-				<button @onclick="ViewModel.SaveAndClose">Enregistrer et Terminer</button>
-				<button @onclick="ViewModel.OnCloseData">Fermer</button>
+				<div class="hr-margin-5px">
+					<button @onclick="ViewModel.SaveAndNewData" class="hr-margin-5px-left">Enregistrer et nouvelle entrée</button>
+					<button @onclick="ViewModel.SaveAndClose" class="hr-margin-5px-left">Enregistrer et Terminer</button>
+					<button @onclick="ViewModel.OnCloseData" class="hr-margin-5px-left">Fermer</button>
+				</div>
 			</div>
 		</CustomDialog>
 	</div>

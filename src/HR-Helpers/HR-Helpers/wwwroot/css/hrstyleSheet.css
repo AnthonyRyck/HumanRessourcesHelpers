@@ -22,6 +22,14 @@
 	margin-bottom: 2px;
 }
 
+.hr-margin-5px-left {
+	margin-left: 5px;
+}
+
+.ht-margin-5px-right {
+	margin-right: 5px;
+}
+
 .hr-flex {
 	display: flex;
 	flex-wrap: wrap;
