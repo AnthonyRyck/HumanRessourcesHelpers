@@ -38,18 +38,6 @@ namespace HR_Helpers.Data
 			return tableaux;
 		}
 
-		///<inheritdoc cref="IDataAccess.GetAllDatas"/>
-		public Task<List<List<ValueColonne>>> GetAllDatas()
-		{
-			throw new NotImplementedException();
-		}
-
-		///<inheritdoc cref="IDataAccess.GetDatas"/>
-		public Task<List<ValueColonne>> GetDatas()
-		{
-			throw new NotImplementedException();
-		}
-
 		///<inheritdoc cref="IDataAccess.GetTable(string)"/>
 		public async Task<Tableau> GetTable(string idTableau)
 		{
@@ -100,6 +88,20 @@ namespace HR_Helpers.Data
 			catch (Exception ex)
 			{
 				Log.Error(ex, "Erreur récupération des valeurs - IdTableau:" + idTableau + " - userId:"+ userId);
+				throw;
+			}
+		}
+
+		/// <see cref="IDataAccess.GetValeurs(string)"/>
+		public async Task<List<List<ValueColonne>>> GetValeurs(string idTableau)
+		{
+			try
+			{
+				return await _sqlContext.GetValeurs(idTableau);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur récupération des valeurs - IdTableau:" + idTableau);
 				throw;
 			}
 		}

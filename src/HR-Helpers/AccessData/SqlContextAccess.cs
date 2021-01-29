@@ -260,7 +260,81 @@ namespace AccessData
                     }
 
                     // Comme pas d'autre numéro de ligne, j'ajoute les enregistrements.
-                    toutesLesLignes.Add(uneLigne);
+                    if(uneLigne.Count > 0)
+                        toutesLesLignes.Add(uneLigne);
+                }
+
+                return toutesLesLignes;
+            };
+
+            List<List<ValueColonne>> result = new List<List<ValueColonne>>();
+
+            try
+            {
+                result = await GetCoreAsync(commandText, funcCmd);
+            }
+            catch (Exception ex)
+            {
+                var exs = ex.Message;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Récupère les valeurs pour le tableau et l'utilisateur.
+        /// </summary>
+        /// <param name="idTableau"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        public async Task<List<List<ValueColonne>>> GetValeurs(string idTableau)
+        {
+            var commandText = @"SELECT NumeroLigne, ColonneId, TableId, UserId, Valeur "
+                                + "FROM valeur "
+                                + $"WHERE TableId='{idTableau}' "
+                                + $"ORDER BY UserId, NumeroLigne, ColonneId;";
+
+            Func<MySqlCommand, Task<List<List<ValueColonne>>>> funcCmd = async (cmd) =>
+            {
+                List<List<ValueColonne>> toutesLesLignes = new List<List<ValueColonne>>();
+
+                List<ValueColonne> uneLigne = new List<ValueColonne>();
+
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    int numeroLigne = 0;
+
+                    while (reader.Read())
+                    {
+                        var valeur = new ValueColonne()
+                        {
+                            NumeroLigne = reader.GetInt32(0),
+                            IdColonne = reader.GetInt32(1),
+                            IdTableau = new Guid(reader.GetString(2)),
+                            IdUser = reader.GetString(3),
+                            Value = reader.GetString(4)
+                        };
+
+                        if (numeroLigne == 0 || numeroLigne == valeur.NumeroLigne)
+                        {
+                            uneLigne.Add(valeur);
+                        }
+                        else
+                        {
+                            // Ajout la collection de la ligne X
+                            toutesLesLignes.Add(uneLigne);
+
+                            // Renouvelle pour la ligne Y
+                            uneLigne = new List<ValueColonne>();
+                            uneLigne.Add(valeur);
+                        }
+
+                        numeroLigne = valeur.NumeroLigne;
+                    }
+
+                    // Comme pas d'autre numéro de ligne, j'ajoute les enregistrements.
+                    if (uneLigne.Count > 0)
+                        toutesLesLignes.Add(uneLigne);
                 }
 
                 return toutesLesLignes;

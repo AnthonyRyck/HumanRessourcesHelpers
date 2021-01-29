@@ -24,13 +24,16 @@
 
 		<div class="row">
 			<RadzenButton Text="Ajouter des valeurs"
-							ButtonStyle="ButtonStyle.Info"
+						  ButtonStyle="ButtonStyle.Info"
 						  Click="ViewModel.OpenDialog" />
 
-			<RadzenButton Text="Export en Excel"
-							class="hr-margin-5px-left"
-							ButtonStyle="ButtonStyle.Light"
-						  Click="ViewModel.ExportToExcel" />
+			@if (ViewModel.IsUserProprietaire)
+			{
+				<RadzenButton Text="Export en Excel"
+							  class="hr-margin-5px-left"
+							  ButtonStyle="ButtonStyle.Light"
+							  Click="ViewModel.ExportToExcel" />
+			}
 		</div>
 	</RadzenCard>
 
@@ -41,9 +44,31 @@
 				<div>
 					@foreach (var item in ViewModel.TableauSelected.Colonnes)
 					{
-						<div class="hr-margin-2px-top-bottom">
-							<span><u>@item.NomColonne</u> : <input type="@item.TypeData" @bind-value="ViewModel.GetValueColonne(item.IdColonne).Value" /> </span>
-						</div>
+					<div class="hr-margin-2px-top-bottom">
+
+						@switch (item.TypeData)
+						{
+							case "number":
+								@*<span><u>@item.NomColonne</u> : <RadzenNumeric @bind-Value="ViewModel.GetValueColonne(item.IdColonne).Value" /> </span>*@
+
+								<span><u>@item.NomColonne</u> : <input type="number"
+																		@onchange="@(e => OnChangeNumber(e, item.IdColonne))"
+																		/> </span>
+								break;
+
+							case "date":
+								<span>
+									<u>@item.NomColonne</u> : <input type="date"
+												   @onchange="@(e => ViewModel.OnChangeDate(e, item.IdColonne))"
+												   format-value="dd/MM/yyyy" />
+								</span>
+								break;
+
+							default:
+								<span><u>@item.NomColonne</u> : <input type="@item.TypeData" @bind-value="ViewModel.GetValueColonne(item.IdColonne).Value" /> </span>
+								break;
+						}
+					</div>
 					}
 				</div>
 
@@ -94,8 +119,18 @@ else
 	[Parameter]
 	public string IdTableau { get; set; }
 
+	public DateTime DateTest { get; set; }
+
 	protected async override Task OnParametersSetAsync()
 	{
 		await ViewModel.LoadTableau(IdTableau);
+	}
+
+
+
+	public void OnChangeNumber(ChangeEventArgs args, int idColonne)
+	{
+		var temp = args.Value.ToString().Replace('.', ',');
+		ViewModel.GetValueColonne(idColonne).Value = temp;
 	}
 }

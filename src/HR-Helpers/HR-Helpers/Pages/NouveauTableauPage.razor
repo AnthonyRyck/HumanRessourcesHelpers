@@ -23,7 +23,6 @@
 			</div>
 
 			<div class="hr-margin-2px-top-bottom">
-				@*<span>Description : <input type="text" @bind-value="ViewModel.NouveauTableau.Description" /></span>*@
 				<RadzenTextArea Placeholder="Entrer une description..."
 								Style="width:400px"
 								@bind-Value="ViewModel.NouveauTableau.Description" />
@@ -32,10 +31,6 @@
 			<div class="hr-margin-2px-top-bottom">
 				Date de fin d'inscription dans le tableau :
 				<div>
-					@*<input type="datetime-local"
-				@bind-value="ViewModel.NouveauTableau.DateFinInscription" />*@
-					@*Change=@(args => OnChange(args, "DatePicker", "MM/dd/yyyy")) />*@
-
 					<RadzenDatePicker @bind-Value=ViewModel.NouveauTableau.DateFinInscription
 									  DateFormat="d" />
 				</div>
@@ -58,7 +53,7 @@
 							Type de donnée : <select @onchange="@(e =>  ViewModel.OnChangeDataType(e))">
 								<option></option>
 								<option value="text">Texte</option>
-								<option value="datetime-local">Date</option>
+								<option value="date">Date</option>
 								<option value="number">Nombre</option>
 								<option value="email">Email</option>
 							</select>

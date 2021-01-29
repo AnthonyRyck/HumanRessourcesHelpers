@@ -1,4 +1,5 @@
 ﻿using AccessData.Models;
+using Microsoft.AspNetCore.Components;
 using Radzen.Blazor;
 using System;
 using System.Collections.Generic;
@@ -29,8 +30,10 @@ namespace HR_Helpers.ViewModels
 		/// </summary>
 		List<ValueColonne> ValeursSaisies { get; set; }
 
-
-		RadzenGrid<ColonneModel> ColonneModelGrid { get; set; }
+		/// <summary>
+		/// Indicateur si l'utilisateur est le propriétaire du tableau.
+		/// </summary>
+		bool IsUserProprietaire { get; set; }
 
 		/// <summary>
 		/// Charge le tableau avec l'ID donnée en paramètre
@@ -67,9 +70,18 @@ namespace HR_Helpers.ViewModels
 		Task SaveAndNewData();
 
 		/// <summary>
+		/// Event dans le cas d'un format date.
+		/// </summary>
+		/// <param name="args"></param>
+		/// <param name="idColonne"></param>
+		void OnChangeDate(ChangeEventArgs args, int idColonne);
+
+		/// <summary>
 		/// Exporte les valeurs vers Excels
 		/// </summary>
 		/// <returns></returns>
 		Task ExportToExcel();
+
+		
 	}
 }

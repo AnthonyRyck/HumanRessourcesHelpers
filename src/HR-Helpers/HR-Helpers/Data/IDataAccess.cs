@@ -45,19 +45,14 @@ namespace HR_Helpers.Data
 		Task<List<List<ValueColonne>>> GetValeurs(string idTableau, string userId);
 
 		/// <summary>
-		/// 
+		/// Récupère la liste des valeurs pour un tableau, et pour tous les utilisateurs.
 		/// </summary>
+		/// <param name="idTableau"></param>
 		/// <returns></returns>
-		Task<List<ValueColonne>> GetDatas();
-
-		/// <summary>
-		/// PAS ENCORE UTILISE
-		/// </summary>
-		/// <returns></returns>
-		Task<List<List<ValueColonne>>> GetAllDatas();
-
+		Task<List<List<ValueColonne>>> GetValeurs(string idTableau);
 
 		
 		Task SaveData(List<List<ValueColonne>> valeurs);
+		
 	}
 }

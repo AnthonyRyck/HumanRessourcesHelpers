@@ -2,9 +2,9 @@
 using BlazorDownloadFile;
 using HR_Helpers.Data;
 using HR_Helpers.Services;
+using Microsoft.AspNetCore.Components;
 using OfficeOpenXml;
 using Radzen;
-using Radzen.Blazor;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -35,16 +35,14 @@ namespace HR_Helpers.ViewModels
 		private NotificationService _notificationService;
 		private IBlazorDownloadFileService DownloadFileService;
 
-		/// <see cref="ITableauViewModel."/>
-		public RadzenGrid<ColonneModel> ColonneModelGrid { get; set; }
+		/// <see cref="ITableauViewModel.IsUserProprietaire"/>
+		public bool IsUserProprietaire { get; set; }
 
 		/// <summary>
 		/// Correspond au numéro de ligne en cours.
 		/// </summary>
 		public int NumeroLigne { get; set; }
 
-
-		string pathTempExcel = Path.Combine(AppContext.BaseDirectory, "TempExcel");
 
 		#endregion
 
@@ -66,7 +64,17 @@ namespace HR_Helpers.ViewModels
 		public async Task LoadTableau(string idTableau)
 		{
 			TableauSelected = await DataAccess.GetTable(idTableau);
-			ToutesLesEntrees = await DataAccess.GetValeurs(idTableau, CurrentUserService.UserId);
+			IsUserProprietaire = (CurrentUserService.UserId == TableauSelected.IdUser);
+			
+			if(IsUserProprietaire)
+			{
+				ToutesLesEntrees = await DataAccess.GetValeurs(idTableau);
+			}
+			else
+			{
+				ToutesLesEntrees = await DataAccess.GetValeurs(idTableau, CurrentUserService.UserId);
+			}
+
 
 			NumeroLigne = GetLastLineNumber();
 
@@ -90,6 +98,13 @@ namespace HR_Helpers.ViewModels
 		{
 			ShowNouvelleEntree = false;
 			InitNewData();
+		}
+
+		/// <see cref="ITableauViewModel.OnChangeDate"/>
+		public void OnChangeDate(ChangeEventArgs args, int idColonne)
+		{
+			var date = DateTime.Parse(args.Value.ToString()).ToString("d");
+			GetValueColonne(idColonne).Value = date;
 		}
 
 		/// <see cref="ITableauViewModel.SaveAndClose"/>
@@ -149,10 +164,17 @@ namespace HR_Helpers.ViewModels
 			}
 			catch (Exception ex)
 			{
-				bool stop = true;
+				string errorMsg = "Erreur sur l'export du fichier Excel";
+				Log.Error(ex, errorMsg);
+				_notificationService.Notify(NotificationSeverity.Error, "Erreur", errorMsg, 3000);
 			}
 		}
 
+		/// <summary>
+		/// Crée les colonnes dans la feuille Excel
+		/// </summary>
+		/// <param name="sheet"></param>
+		/// <param name="tableau"></param>
 		private void CreateColonnes(ExcelWorksheet sheet, Tableau tableau)
 		{
 			int i = 0;
@@ -172,6 +194,11 @@ namespace HR_Helpers.ViewModels
 			}
 		}
 
+		/// <summary>
+		/// Ajoute les valeurs dans le fichier Excel.
+		/// </summary>
+		/// <param name="sheet"></param>
+		/// <param name="allValues"></param>
 		private void AddValues(ExcelWorksheet sheet, List<List<ValueColonne>> allValues)
 		{
 			int i = 1;
@@ -184,13 +211,25 @@ namespace HR_Helpers.ViewModels
 				{
 					string lettreColonne = GetColonneLetter(colonne.IdColonne);
 
-					string debug = lettreColonne + i;
+					string indexCell = lettreColonne + i;
 
-					sheet.Cells[debug].Value = colonne.Value;
+					if (TableauSelected.Colonnes.FirstOrDefault(x => x.IdColonne == colonne.IdColonne).TypeData == "number")
+					{
+						sheet.Cells[indexCell].Value = Convert.ToDecimal(colonne.Value);
+					}
+					else
+					{
+						sheet.Cells[indexCell].Value = colonne.Value;
+					}
 				}
 			}
 		}
 
+		/// <summary>
+		/// Donne la colonne Excel en fonction de l'index.
+		/// </summary>
+		/// <param name="i"></param>
+		/// <returns></returns>
 		private string GetColonneLetter(int i)
 		{
 			switch (i)
@@ -277,7 +316,10 @@ namespace HR_Helpers.ViewModels
 			}		
 		}
 
-
+		/// <summary>
+		/// Récupère le dernier numéro de ligne.
+		/// </summary>
+		/// <returns></returns>
 		private int GetLastLineNumber()
 		{
 			if(ToutesLesEntrees.Count == 0)
