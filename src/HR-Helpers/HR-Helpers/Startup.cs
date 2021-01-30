@@ -1,5 +1,6 @@
 using AccessData;
 using BlazorDownloadFile;
+using Blazored.Modal;
 using HR_Helpers.Areas.Identity;
 using HR_Helpers.Data;
 using HR_Helpers.Data.ModelValidation;
@@ -62,6 +63,8 @@ namespace HR_Helpers
 
 			// Pour téléchargement de fichier.
 			services.AddBlazorDownloadFile();
+
+			services.AddBlazoredModal();
 
 			services.AddHttpContextAccessor();
 			services.AddScoped<CurrentUserService>();

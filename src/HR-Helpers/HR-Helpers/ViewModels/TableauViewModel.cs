@@ -1,5 +1,8 @@
 ﻿using AccessData.Models;
 using BlazorDownloadFile;
+using Blazored.Modal;
+using Blazored.Modal.Services;
+using HR_Helpers.Composants;
 using HR_Helpers.Data;
 using HR_Helpers.Services;
 using Microsoft.AspNetCore.Components;
@@ -38,6 +41,7 @@ namespace HR_Helpers.ViewModels
 		private NotificationService _notificationService;
 		private IBlazorDownloadFileService DownloadFileService;
 		private NavigationManager NavigationManager;
+		private IModalService ModalService;
 
 		/// <see cref="ITableauViewModel.IsUserProprietaire"/>
 		public bool IsUserProprietaire { get; set; }
@@ -54,13 +58,14 @@ namespace HR_Helpers.ViewModels
 
 		public TableauViewModel(IDataAccess dataAccess, CurrentUserService currentUser, 
 			NotificationService notificationSvc, IBlazorDownloadFileService blazorDownloadFileService,
-			NavigationManager navigationManager)
+			NavigationManager navigationManager, IModalService modalSvc)
 		{
 			DataAccess = dataAccess;
 			CurrentUserService = currentUser;
 			_notificationService = notificationSvc;
 			DownloadFileService = blazorDownloadFileService;
 
+			ModalService = modalSvc;
 			NavigationManager = navigationManager;
 		}
 
@@ -128,6 +133,13 @@ namespace HR_Helpers.ViewModels
 		{
 			var date = DateTime.Parse(args.Value.ToString()).ToString("d");
 			GetValueColonne(idColonne).Value = date;
+		}
+
+		/// <see cref="ITableauViewModel.OnChangeNumber(ChangeEventArgs, int)"/>
+		public void OnChangeNumber(ChangeEventArgs args, int idColonne)
+		{
+			var tempNumber = args.Value.ToString().Replace('.', ',');
+			GetValueColonne(idColonne).Value = tempNumber;
 		}
 
 		/// <see cref="ITableauViewModel.SaveAndClose"/>
@@ -212,6 +224,42 @@ namespace HR_Helpers.ViewModels
 			catch (Exception ex)
 			{
 				string errorMsg = "Erreur sur la suppression d'une ligne";
+				Log.Error(ex, errorMsg);
+				_notificationService.Notify(NotificationSeverity.Error, "Erreur", errorMsg, 3000);
+			}
+		}
+
+		/// <see cref="ITableauViewModel.EditRow(Guid, string, int)"/>
+		public async Task EditRow(Guid idTableau, string idUser, int numeroLigne)
+		{
+			try
+			{
+				List<ValueColonne> value = new List<ValueColonne>();
+
+				foreach (var item in ToutesLesEntrees)
+				{
+					value = item.Where(y => y.NumeroLigne == numeroLigne
+									&& y.IdUser == idUser
+									&& y.IdTableau == idTableau).ToList();
+				}
+
+				var parameters = new ModalParameters();
+				parameters.Add(nameof(EditRowComponent.Colonnes), TableauSelected.Colonnes);
+				parameters.Add(nameof(EditRowComponent.ValueColonnes), value);
+
+				var messageForm = ModalService.Show<EditRowComponent>("Edition", parameters);
+				var result = await messageForm.Result;
+
+				if (!result.Cancelled)
+				{
+					value = (List<ValueColonne>)result.Data;
+
+					await DataAccess.UpdateRow(value);
+				}
+			}
+			catch (Exception ex)
+			{
+				string errorMsg = "Erreur sur l'édition d'une ligne";
 				Log.Error(ex, errorMsg);
 				_notificationService.Notify(NotificationSeverity.Error, "Erreur", errorMsg, 3000);
 			}

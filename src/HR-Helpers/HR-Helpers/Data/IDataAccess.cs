@@ -69,5 +69,12 @@ namespace HR_Helpers.Data
 		/// <param name="numeroLigne"></param>
 		/// <returns></returns>
 		Task DeleteRow(string idTableau, string idUser, int numeroLigne);
+
+		/// <summary>
+		/// Met à jour une ligne de valeur.
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		Task UpdateRow(List<ValueColonne> value);
 	}
 }

@@ -1,4 +1,4 @@
-<CascadingAuthenticationState>
+@*<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
@@ -10,3 +10,30 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+<CascadingBlazoredModal>
+	<Router AppAssembly="typeof(Program).Assembly">
+		<Found Context="routeData">
+			<RouteView RouteData="routeData" DefaultLayout="typeof(MainLayout)" />
+		</Found>
+		<NotFound>
+			<h1>Page not found</h1>
+			<p>Sorry, but there's nothing here!</p>
+		</NotFound>
+	</Router>
+</CascadingBlazoredModal>*@
+
+<CascadingBlazoredModal>
+	<Router AppAssembly="@typeof(Program).Assembly">
+		<Found Context="routeData">
+			<AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+		</Found>
+		<NotFound>
+			<CascadingAuthenticationState>
+				<LayoutView Layout="@typeof(MainLayout)">
+					<p>Sorry, there's nothing at this address.</p>
+				</LayoutView>
+			</CascadingAuthenticationState>
+		</NotFound>
+	</Router>
+</CascadingBlazoredModal>

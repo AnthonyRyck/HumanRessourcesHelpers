@@ -62,7 +62,7 @@
 								@*<span><u>@item.NomColonne</u> : <RadzenNumeric @bind-Value="ViewModel.GetValueColonne(item.IdColonne).Value" /> </span>*@
 
 								<span><u>@item.NomColonne</u> : <input type="number"
-																		@onchange="@(e => OnChangeNumber(e, item.IdColonne))"
+																		@onchange="@(e => ViewModel.OnChangeNumber(e, item.IdColonne))"
 																		/> </span>
 								break;
 
@@ -113,7 +113,10 @@
 						<td > 
 							<span>
 								<RadzenButton Icon="edit"
-											  Size="ButtonSize.Small" />
+											  Size="ButtonSize.Small"
+											  Click="@(() => ViewModel.EditRow(data.FirstOrDefault().IdTableau,
+																				data.FirstOrDefault().IdUser,
+																				data.FirstOrDefault().NumeroLigne))"/>
 
 								<RadzenButton ButtonStyle="ButtonStyle.Danger"
 											  Icon="close"
@@ -145,18 +148,10 @@ else
 	[Parameter]
 	public string IdTableau { get; set; }
 
-	public DateTime DateTest { get; set; }
-
 	protected async override Task OnParametersSetAsync()
 	{
 		await ViewModel.LoadTableau(IdTableau);
 	}
 
-
-
-	public void OnChangeNumber(ChangeEventArgs args, int idColonne)
-	{
-		var temp = args.Value.ToString().Replace('.', ',');
-		ViewModel.GetValueColonne(idColonne).Value = temp;
-	}
+	[CascadingParameter] public IModalService Modal { get; set; }
 }

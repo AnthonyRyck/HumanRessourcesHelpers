@@ -82,6 +82,13 @@ namespace HR_Helpers.ViewModels
 		void OnChangeDate(ChangeEventArgs args, int idColonne);
 
 		/// <summary>
+		/// Event dans le cas d'un nombre
+		/// </summary>
+		/// <param name="args"></param>
+		/// <param name="idColonne"></param>
+		void OnChangeNumber(ChangeEventArgs args, int idColonne);
+
+		/// <summary>
 		/// Exporte les valeurs vers Excels
 		/// </summary>
 		/// <returns></returns>
@@ -101,5 +108,14 @@ namespace HR_Helpers.ViewModels
 		/// <param name="numeroLigne"></param>
 		/// <returns></returns>
 		Task DeleteRow(Guid idTableau, string idUser, int numeroLigne);
+
+		/// <summary>
+		/// Edite cette ligne.
+		/// </summary>
+		/// <param name="idTableau"></param>
+		/// <param name="idUser"></param>
+		/// <param name="numeroLigne"></param>
+		/// <returns></returns>
+		Task EditRow(Guid idTableau, string idUser, int numeroLigne);
 	}
 }

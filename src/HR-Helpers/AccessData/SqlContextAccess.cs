@@ -93,6 +93,26 @@ namespace AccessData
             await ExecuteCoreAsync(commandDeleteValeur);
         }
 
+        /// <summary>
+        /// Met à une une ligne de valeur.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+		public async Task UpdateValeurs(List<ValueColonne> value)
+		{
+			foreach (var valeur in value)
+			{
+                string cmdUpdate = $"UPDATE valeur " 
+                    + $"SET valeur='{valeur.Value}' " 
+                    + $"WHERE NumeroLigne={valeur.NumeroLigne} "
+                    + $"AND TableId='{valeur.IdTableau}' "
+                    + $"AND UserId='{valeur.IdUser}' "
+                    + $"AND ColonneId={valeur.IdColonne};";
+
+                await ExecuteCoreAsync(cmdUpdate);
+            }
+		}
+
 		/// <summary>
 		/// Supprime le tableau et les valeurs associés.
 		/// </summary>

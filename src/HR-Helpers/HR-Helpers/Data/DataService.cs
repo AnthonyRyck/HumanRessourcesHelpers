@@ -134,6 +134,20 @@ namespace HR_Helpers.Data
 			}
 		}
 
+		/// <see cref="IDataAccess.UpdateRow(List{ValueColonne})"/>
+		public async Task UpdateRow(List<ValueColonne> value)
+		{
+			try
+			{
+				await _sqlContext.UpdateValeurs(value);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur sur la mise à jour d'une linge");
+				throw;
+			}
+		}
+
 		#endregion
 
 	}
