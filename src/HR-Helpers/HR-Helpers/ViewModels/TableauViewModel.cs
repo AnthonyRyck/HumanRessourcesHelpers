@@ -30,6 +30,9 @@ namespace HR_Helpers.ViewModels
 		///<see cref="ITableauViewModel.ShowNouvelleEntree"/>
 		public bool ShowNouvelleEntree { get; set; }
 
+		///<see cref="ITableauViewModel.IsOutDated"/>
+		public bool IsOutDated { get; set; }
+
 		private IDataAccess DataAccess;
 		private CurrentUserService CurrentUserService;
 		private NotificationService _notificationService;
@@ -69,8 +72,15 @@ namespace HR_Helpers.ViewModels
 		public async Task LoadTableau(string idTableau)
 		{
 			TableauSelected = await DataAccess.GetTable(idTableau);
+			if(TableauSelected == null)
+			{
+				NavigationManager.NavigateTo("/errortableau");
+				return;
+			}
+
 			IsUserProprietaire = (CurrentUserService.UserId == TableauSelected.IdUser);
-			
+			IsOutDated = IsTableOutDated(DateTime.Now, TableauSelected.DateFinInscription);
+
 			if(IsUserProprietaire)
 			{
 				ToutesLesEntrees = await DataAccess.GetValeurs(idTableau);
@@ -79,7 +89,6 @@ namespace HR_Helpers.ViewModels
 			{
 				ToutesLesEntrees = await DataAccess.GetValeurs(idTableau, CurrentUserService.UserId);
 			}
-
 
 			NumeroLigne = GetLastLineNumber();
 
@@ -183,9 +192,6 @@ namespace HR_Helpers.ViewModels
 				_notificationService.Notify(NotificationSeverity.Error, "Erreur", errorMsg, 3000);
 			}
 		}
-
-
-
 
 		#endregion
 
@@ -346,6 +352,17 @@ namespace HR_Helpers.ViewModels
 
 			int test = ToutesLesEntrees.Max(x => x.Max(y => y.NumeroLigne));
 			return test;
+		}
+
+		/// <summary>
+		/// Détermine si un tableau est terminé.
+		/// </summary>
+		/// <param name="now"></param>
+		/// <param name="dateFinInscription"></param>
+		/// <returns></returns>
+		private bool IsTableOutDated(DateTime now, DateTime dateFinInscription)
+		{
+			return dateFinInscription.CompareTo(now) < 0;
 		}
 
 		#endregion

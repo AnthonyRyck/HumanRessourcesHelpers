@@ -165,6 +165,10 @@ namespace AccessData
             try
             {
                 var tableau = await GetCoreAsync<Tableau>(commandSelectTableau, funcCmd);
+
+                if (tableau == null)
+                    return null;
+
                 var colonnes = await GetCoreAsync<List<ColonneModel>>(commandColonnes, funcCmdColonne);
 
                 tableau.Colonnes = colonnes;

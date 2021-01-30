@@ -36,6 +36,11 @@ namespace HR_Helpers.ViewModels
 		bool IsUserProprietaire { get; set; }
 
 		/// <summary>
+		/// Indicateur si le tableau est "terminé".
+		/// </summary>
+		bool IsOutDated { get; set; }
+
+		/// <summary>
 		/// Charge le tableau avec l'ID donnée en paramètre
 		/// </summary>
 		/// <param name="idTableau"></param>

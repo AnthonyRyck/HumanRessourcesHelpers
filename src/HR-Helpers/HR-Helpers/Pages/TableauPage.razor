@@ -25,7 +25,9 @@
 		<div class="row">
 			<RadzenButton Text="Ajouter des valeurs"
 						  ButtonStyle="ButtonStyle.Info"
-						  Click="ViewModel.OpenDialog" />
+						  Click="ViewModel.OpenDialog"
+						  Disabled="ViewModel.IsOutDated"
+						  Style="color: black"/>
 
 			@if (ViewModel.IsUserProprietaire)
 			{
