@@ -2,6 +2,7 @@ using AccessData;
 using BlazorDownloadFile;
 using HR_Helpers.Areas.Identity;
 using HR_Helpers.Data;
+using HR_Helpers.Data.ModelValidation;
 using HR_Helpers.Services;
 using HR_Helpers.ViewModels;
 using Microsoft.AspNetCore.Builder;

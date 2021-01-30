@@ -1,5 +1,7 @@
 ﻿using AccessData.Models;
+using HR_Helpers.Data.ModelValidation;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Radzen.Blazor;
 using System;
 using System.Collections.Generic;
@@ -14,6 +16,16 @@ namespace HR_Helpers.ViewModels
 		/// Objet nouveau Tableau.
 		/// </summary>
 		Tableau NouveauTableau { get; set; }
+
+		/// <summary>
+		/// Nouveau tableau.
+		/// </summary>
+		TableauModelValidation TableauModel { get; set; }
+
+		/// <summary>
+		/// Pour la validation
+		/// </summary>
+		EditContext EditContextValidation { get; set; }
 
 		/// <summary>
 		/// Pour l'ajout d'une nouvelle colonne.
@@ -63,6 +75,8 @@ namespace HR_Helpers.ViewModels
 		/// Termine et sauvegarde la colonne
 		/// </summary>
 		void CloseAndSaveNewColonne();
+
+
 
 	}
 }

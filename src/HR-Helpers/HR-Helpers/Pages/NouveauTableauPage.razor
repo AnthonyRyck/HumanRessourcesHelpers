@@ -5,6 +5,7 @@
 @using AccessData.Models
 @using Radzen.Blazor
 @using Radzen
+@using HR_Helpers.Data.ModelValidation
 
 @inject INewTableViewModel ViewModel
 
@@ -17,32 +18,50 @@
 	</NotAuthorized>
 
 	<Authorized>
-		<div>
+		<EditForm EditContext="@ViewModel.EditContextValidation" OnValidSubmit="@ViewModel.CreateTable" Context="valideMoi">
+			<div>
+				<DataAnnotationsValidator />
+				@*<ValidationSummary />*@
+
+				<div>
+					<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).NomDuTableau)" />
+				</div>
+			</div>
 			<div class="hr-margin-2px-top-bottom">
-				<span>Nom du tableau : <input type="text" @bind-value="ViewModel.NouveauTableau.NomDuTableau" /></span>
+				<span>Nom du tableau : <input type="text" @bind-value="ViewModel.TableauModel.NomDuTableau" /></span>
 			</div>
 
+			<div>
+				<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).Description)" />
+			</div>
 			<div class="hr-margin-2px-top-bottom">
 				<RadzenTextArea Placeholder="Entrer une description..."
 								Style="width:400px"
-								@bind-Value="ViewModel.NouveauTableau.Description" />
+								@bind-Value="ViewModel.TableauModel.Description" />
 			</div>
 
+			<div>
+				<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).DateFinInscription)" />
+			</div>
 			<div class="hr-margin-2px-top-bottom">
 				Date de fin d'inscription dans le tableau :
 				<div>
-					<RadzenDatePicker @bind-Value=ViewModel.NouveauTableau.DateFinInscription
+					<RadzenDatePicker @bind-Value=ViewModel.TableauModel.DateFinInscription
 									  DateFormat="d" />
 				</div>
 			</div>
 
+			<div>
+				<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).Colonnes)" />
+			</div>
+
 			@*Ajout des colonnes*@
-		<div class="hr-margin-2px-top-bottom">
-			<RadzenButton Text="Ajouter une colonne"
-						  Icon="add_circle"
-						  ButtonStyle="ButtonStyle.Primary"
-						  Click="ViewModel.OnClickAddColonne" />
-		</div>
+			<div class="hr-margin-2px-top-bottom">
+				<RadzenButton Text="Ajouter une colonne"
+							  Icon="add_circle"
+							  ButtonStyle="ButtonStyle.Primary"
+							  Click="ViewModel.OnClickAddColonne" />
+			</div>
 
 			<CustomDialog Show="@ViewModel.ShowNewColonne">
 				<div class="hr-margin-5px">
@@ -84,17 +103,18 @@
 			<div class="hr-margin-2px-top-bottom">
 				<RadzenButton Text="Sauvegarder le tableau"
 							  Icon="save"
-							  ButtonStyle="ButtonStyle.Success"
-							  Click="ViewModel.CreateTable" />
+							  ButtonType="ButtonType.Submit"
+							  ButtonStyle="ButtonStyle.Success" />
 			</div>
 
 			@*Affichage des colonnes*@
 			<div class="hr-margin-2px-top-bottom">
-				@if (ViewModel.NouveauTableau.Colonnes.Count > 0)
+				@if (ViewModel.TableauModel.Colonnes != null
+				 && ViewModel.TableauModel.Colonnes.Count > 0)
 				{
 					<RadzenGrid @ref="ViewModel.ColonneModelGrid"
 								TItem="ColonneModel"
-								Data="@ViewModel.NouveauTableau.Colonnes">
+								Data="@ViewModel.TableauModel.Colonnes">
 						<Columns>
 							<RadzenGridColumn TItem="ColonneModel"
 											  Property="NomColonne"
@@ -118,11 +138,18 @@
 				}
 
 			</div>
-		</div>
+		</EditForm>
 
 	</Authorized>
 </AuthorizeView>
 
 @code {
+
+
+
+	protected override void OnInitialized()
+	{
+		ViewModel.EditContextValidation = new EditContext(ViewModel.TableauModel);
+	}
 
 }
