@@ -21,7 +21,6 @@
 		<EditForm EditContext="@ViewModel.EditContextValidation" OnValidSubmit="@ViewModel.CreateTable" Context="valideMoi">
 			<div>
 				<DataAnnotationsValidator />
-				@*<ValidationSummary />*@
 
 				<div>
 					<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).NomDuTableau)" />

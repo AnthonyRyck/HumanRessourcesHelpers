@@ -59,23 +59,27 @@
 						@switch (item.TypeData)
 						{
 							case "number":
-								@*<span><u>@item.NomColonne</u> : <RadzenNumeric @bind-Value="ViewModel.GetValueColonne(item.IdColonne).Value" /> </span>*@
-
 								<span><u>@item.NomColonne</u> : <input type="number"
-																		@onchange="@(e => ViewModel.OnChangeNumber(e, item.IdColonne))"
-																		/> </span>
+																		@onchange="@(e => ViewModel.OnChangeNumber(e, item.IdColonne))" /> 
+										<span>@item.Description</span>
+								</span>
 								break;
 
 							case "date":
 								<span>
 									<u>@item.NomColonne</u> : <input type="date"
-												   @onchange="@(e => ViewModel.OnChangeDate(e, item.IdColonne))"
-												   format-value="dd/MM/yyyy" />
+														 @onchange="@(e => ViewModel.OnChangeDate(e, item.IdColonne))"
+														 format-value="dd/MM/yyyy" />
+
+									<span>@item.Description</span>
 								</span>
 								break;
 
 							default:
-								<span><u>@item.NomColonne</u> : <input type="@item.TypeData" @bind-value="ViewModel.GetValueColonne(item.IdColonne).Value" /> </span>
+								<span>
+									<u>@item.NomColonne</u> : <input type="@item.TypeData" @bind-value="ViewModel.GetValueColonne(item.IdColonne).Value" />
+									<span>@item.Description</span>
+								</span>
 								break;
 						}
 					</div>
