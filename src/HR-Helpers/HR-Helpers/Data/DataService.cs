@@ -120,6 +120,20 @@ namespace HR_Helpers.Data
 			}
 		}
 
+		/// <see cref="IDataAccess.DeleteRow(string, string, int)"/>
+		public async Task DeleteRow(string idTableau, string idUser, int numeroLigne)
+		{
+			try
+			{
+				await _sqlContext.DeleteRow(idTableau, idUser, numeroLigne);
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur sur la suppression d'une linge - IdTableau:" + idTableau + " - userId:" + idUser + " -linge:" + numeroLigne);
+				throw;
+			}
+		}
+
 		#endregion
 
 	}

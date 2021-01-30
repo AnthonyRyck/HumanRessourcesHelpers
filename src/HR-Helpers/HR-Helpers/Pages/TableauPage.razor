@@ -96,6 +96,9 @@
 		<table class="table">
 			<thead>
 				<tr>
+					<th style="width:85px;">
+						<i>Options</i>
+					</th>
 					@foreach (var colonne in ViewModel.TableauSelected.Colonnes)
 					{
 						<th>@colonne.NomColonne</th>
@@ -107,6 +110,19 @@
 				@foreach (var data in ViewModel.ToutesLesEntrees)
 				{
 					<tr>
+						<td > 
+							<span>
+								<RadzenButton Icon="edit"
+											  Size="ButtonSize.Small" />
+
+								<RadzenButton ButtonStyle="ButtonStyle.Danger"
+											  Icon="close"
+											  Size="ButtonSize.Small"
+											  Click="@(() => ViewModel.DeleteRow(data.FirstOrDefault().IdTableau,
+																				data.FirstOrDefault().IdUser,
+																				data.FirstOrDefault().NumeroLigne))"/>
+							</span>
+						</td>
 						@foreach (var item in data)
 						{
 							<td>@item.Value</td>

@@ -60,5 +60,14 @@ namespace HR_Helpers.Data
 		/// <param name="idTableau"></param>
 		/// <returns></returns>
 		Task DeleteTableau(Guid idTableau);
+
+		/// <summary>
+		/// Supprime une ligne de valeur pour un utilisateur et dans le tableau donné.
+		/// </summary>
+		/// <param name="idTableau"></param>
+		/// <param name="idUser"></param>
+		/// <param name="numeroLigne"></param>
+		/// <returns></returns>
+		Task DeleteRow(string idTableau, string idUser, int numeroLigne);
 	}
 }

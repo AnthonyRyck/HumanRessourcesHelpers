@@ -193,6 +193,30 @@ namespace HR_Helpers.ViewModels
 			}
 		}
 
+		/// <see cref="ITableauViewModel.DeleteRow(Guid, string, int)"/>
+		public async Task DeleteRow(Guid idTableau, string idUser, int numeroLigne)
+		{
+			try
+			{
+				await DataAccess.DeleteRow(idTableau.ToString(), idUser, numeroLigne);
+
+				foreach (var item in ToutesLesEntrees)
+				{
+					item.RemoveAll(y => y.NumeroLigne == numeroLigne
+									&& y.IdUser == idUser
+									&& y.IdTableau == idTableau);
+				}
+
+				ToutesLesEntrees.RemoveAll(x => x.Count == 0);
+			}
+			catch (Exception ex)
+			{
+				string errorMsg = "Erreur sur la suppression d'une ligne";
+				Log.Error(ex, errorMsg);
+				_notificationService.Notify(NotificationSeverity.Error, "Erreur", errorMsg, 3000);
+			}
+		}
+
 		#endregion
 
 		#region Private Methods

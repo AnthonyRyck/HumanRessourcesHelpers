@@ -77,10 +77,27 @@ namespace AccessData
         }
 
         /// <summary>
-        /// Supprime le tableau et les valeurs associés.
+        /// Supprime une ligne de valeur.
         /// </summary>
         /// <param name="idTableau"></param>
+        /// <param name="idUser"></param>
+        /// <param name="numeroLigne"></param>
         /// <returns></returns>
+		public async Task DeleteRow(string idTableau, string idUser, int numeroLigne)
+		{
+            // Suppression d'une ligne
+            string commandDeleteValeur = $"DELETE FROM valeur "
+                                        + $"WHERE TableId='{idTableau}' "
+                                        + $"AND UserId='{idUser}' "
+                                        + $"AND NumeroLigne={numeroLigne} ;";
+            await ExecuteCoreAsync(commandDeleteValeur);
+        }
+
+		/// <summary>
+		/// Supprime le tableau et les valeurs associés.
+		/// </summary>
+		/// <param name="idTableau"></param>
+		/// <returns></returns>
 		public async Task DeleteTableau(Guid idTableau)
 		{
             // Suppression des valeurs

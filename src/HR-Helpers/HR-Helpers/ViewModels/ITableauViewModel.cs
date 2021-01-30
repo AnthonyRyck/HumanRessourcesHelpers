@@ -92,5 +92,14 @@ namespace HR_Helpers.ViewModels
 		/// </summary>
 		/// <returns></returns>
 		Task DeleteTableau();
+
+		/// <summary>
+		/// Supprime une ligne du tableau
+		/// </summary>
+		/// <param name="idTableau"></param>
+		/// <param name="idUser"></param>
+		/// <param name="numeroLigne"></param>
+		/// <returns></returns>
+		Task DeleteRow(Guid idTableau, string idUser, int numeroLigne);
 	}
 }
