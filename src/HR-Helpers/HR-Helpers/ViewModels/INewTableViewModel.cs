@@ -38,11 +38,6 @@ namespace HR_Helpers.ViewModels
 		bool ShowNewColonne { get; set; }
 
 		/// <summary>
-		/// 
-		/// </summary>
-		RadzenGrid<ColonneModel> ColonneModelGrid { get; set; }
-
-		/// <summary>
 		/// Crée un nouveau tableau en base de donnée.
 		/// </summary>
 		/// <returns></returns>
@@ -76,7 +71,19 @@ namespace HR_Helpers.ViewModels
 		/// </summary>
 		void CloseAndSaveNewColonne();
 
+		/// <summary>
+		/// Edit cette colonne.
+		/// </summary>
+		/// <param name="idColonne"></param>
+		/// <param name="idTableau"></param>
+		/// <returns></returns>
+		Task EditColonne(int idColonne, Guid idTableau);
 
-
+		/// <summary>
+		/// Supprime une colonne du nouveau tableau
+		/// </summary>
+		/// <param name="idColonne"></param>
+		/// <returns></returns>
+		void DeleteColonne(int idColonne);
 	}
 }

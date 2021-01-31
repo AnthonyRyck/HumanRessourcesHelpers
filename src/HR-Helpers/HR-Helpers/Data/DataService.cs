@@ -143,10 +143,12 @@ namespace HR_Helpers.Data
 			}
 			catch (Exception ex)
 			{
-				Log.Error(ex, "Erreur sur la mise à jour d'une linge");
+				Log.Error(ex, "Erreur sur la mise à jour d'une VALEUR");
 				throw;
 			}
 		}
+
+
 
 		#endregion
 

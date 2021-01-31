@@ -76,43 +76,6 @@ namespace AccessData
             }
         }
 
-        /// <summary>
-        /// Supprime une ligne de valeur.
-        /// </summary>
-        /// <param name="idTableau"></param>
-        /// <param name="idUser"></param>
-        /// <param name="numeroLigne"></param>
-        /// <returns></returns>
-		public async Task DeleteRow(string idTableau, string idUser, int numeroLigne)
-		{
-            // Suppression d'une ligne
-            string commandDeleteValeur = $"DELETE FROM valeur "
-                                        + $"WHERE TableId='{idTableau}' "
-                                        + $"AND UserId='{idUser}' "
-                                        + $"AND NumeroLigne={numeroLigne} ;";
-            await ExecuteCoreAsync(commandDeleteValeur);
-        }
-
-        /// <summary>
-        /// Met à une une ligne de valeur.
-        /// </summary>
-        /// <param name="value"></param>
-        /// <returns></returns>
-		public async Task UpdateValeurs(List<ValueColonne> value)
-		{
-			foreach (var valeur in value)
-			{
-                string cmdUpdate = $"UPDATE valeur " 
-                    + $"SET valeur='{valeur.Value}' " 
-                    + $"WHERE NumeroLigne={valeur.NumeroLigne} "
-                    + $"AND TableId='{valeur.IdTableau}' "
-                    + $"AND UserId='{valeur.IdUser}' "
-                    + $"AND ColonneId={valeur.IdColonne};";
-
-                await ExecuteCoreAsync(cmdUpdate);
-            }
-		}
-
 		/// <summary>
 		/// Supprime le tableau et les valeurs associés.
 		/// </summary>
@@ -120,17 +83,7 @@ namespace AccessData
 		/// <returns></returns>
 		public async Task DeleteTableau(Guid idTableau)
 		{
-            // Suppression des valeurs
-            string commandDeleteValeur = $"DELETE FROM valeur "
-                                        + $"WHERE TableId='{idTableau.ToString()}';";
-            await ExecuteCoreAsync(commandDeleteValeur);
-
-            // Suppression des colonnes
-            string commandDeleteColonne = $"DELETE FROM colonne "
-                                        + $"WHERE TableId='{idTableau.ToString()}';";
-            await ExecuteCoreAsync(commandDeleteColonne);
-
-            // Suppression de tableau
+            // Suppression du tableau
             string commandDeleteTableau = $"DELETE FROM tableau "
                                         + $"WHERE IdTableau='{idTableau.ToString()}';";
             await ExecuteCoreAsync(commandDeleteTableau);
@@ -418,7 +371,6 @@ namespace AccessData
             return result;
         }
 
-
         /// <summary>
         /// Ajoute une nouvelle ligne de valeur pour un tableau
         /// </summary>
@@ -476,6 +428,50 @@ namespace AccessData
 				throw;
 			}
         }
+
+        /// <summary>
+        /// Supprime une ligne de valeur.
+        /// </summary>
+        /// <param name="idTableau"></param>
+        /// <param name="idUser"></param>
+        /// <param name="numeroLigne"></param>
+        /// <returns></returns>
+        public async Task DeleteRow(string idTableau, string idUser, int numeroLigne)
+        {
+            // Suppression d'une ligne
+            string commandDeleteValeur = $"DELETE FROM valeur "
+                                        + $"WHERE TableId='{idTableau}' "
+                                        + $"AND UserId='{idUser}' "
+                                        + $"AND NumeroLigne={numeroLigne} ;";
+            await ExecuteCoreAsync(commandDeleteValeur);
+        }
+
+        /// <summary>
+        /// Met à une une ligne de valeur.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public async Task UpdateValeurs(List<ValueColonne> value)
+        {
+            foreach (var valeur in value)
+            {
+                string cmdUpdate = $"UPDATE valeur "
+                    + $"SET valeur='{valeur.Value}' "
+                    + $"WHERE NumeroLigne={valeur.NumeroLigne} "
+                    + $"AND TableId='{valeur.IdTableau}' "
+                    + $"AND UserId='{valeur.IdUser}' "
+                    + $"AND ColonneId={valeur.IdColonne};";
+
+                await ExecuteCoreAsync(cmdUpdate);
+            }
+        }
+
+        #endregion
+
+        #region Colonne
+
+
+
 
         #endregion
 

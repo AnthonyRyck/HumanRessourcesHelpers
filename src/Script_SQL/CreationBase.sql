@@ -16,7 +16,7 @@ NomColonne VARCHAR(250) NOT NULL,
 DescriptionColonne VARCHAR(250),
 TypeData VARCHAR(30),
 PRIMARY KEY(IdColonne,TableId),
-FOREIGN KEY(TableId) REFERENCES Tableau(IdTableau));
+FOREIGN KEY(TableId) REFERENCES Tableau(IdTableau) ON DELETE CASCADE);
 
 CREATE TABLE Valeur
 (NumeroLigne INT NOT NULL,
@@ -25,5 +25,5 @@ TableId VARCHAR(255) NOT NULL,
 UserId VARCHAR(255) NOT NULL,  
 Valeur VARCHAR(255) NOT NULL,
 PRIMARY KEY(NumeroLigne, ColonneId,TableId, UserId),
-FOREIGN KEY(TableId) REFERENCES Tableau(IdTableau),
-FOREIGN KEY(ColonneId) REFERENCES Colonne(IdColonne));
+FOREIGN KEY(TableId) REFERENCES Tableau(IdTableau) ON DELETE CASCADE,
+FOREIGN KEY(ColonneId) REFERENCES Colonne(IdColonne) ON DELETE CASCADE);

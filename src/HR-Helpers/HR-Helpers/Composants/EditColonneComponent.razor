@@ -1,0 +1,50 @@
+﻿@using AccessData.Models 
+
+
+<div class="hr-margin-5px">
+	<div>
+		<div class="hr-margin-2px-top-bottom">Nom de colonne : <input type="text" @bind-value="Colonne.NomColonne" /></div>
+		<div class="hr-margin-2px-top-bottom">Description : <input type="text" @bind-value="Colonne.Description" /></div>
+		
+		<div class="hr-margin-2px-top-bottom">
+			Type de donnée : <select @onchange="@(e =>  OnChangeDataType(e))">
+				<option></option>
+				<option value="text">Texte</option>
+				<option value="date">Date</option>
+				<option value="number">Nombre</option>
+				<option value="email">Email</option>
+			</select>
+		</div>
+
+		<div class="hr-margin-2px-top-bottom">
+			<span>
+				<RadzenButton Text="Enregistrer"
+							  Click="SubmitForm" />
+
+				<span class="hr-margin-5px-left">
+					<RadzenButton Text="Annuler"
+								  ButtonStyle="ButtonStyle.Info"
+								  Click="Cancel" />
+				</span>
+			</span>
+		</div>
+	</div>
+</div>
+
+
+@code {
+
+	[Parameter]
+	public ColonneModel Colonne { get; set; }
+
+	[CascadingParameter]
+	BlazoredModalInstance BlazoredModal { get; set; }
+
+	async Task SubmitForm() => await BlazoredModal.CloseAsync(ModalResult.Ok(Colonne));
+	async Task Cancel() => await BlazoredModal.CancelAsync();
+
+	private void OnChangeDataType(ChangeEventArgs e)
+	{
+		Colonne.TypeData = e.Value.ToString();
+	}
+}

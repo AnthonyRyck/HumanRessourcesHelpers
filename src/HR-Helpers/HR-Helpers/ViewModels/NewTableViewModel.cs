@@ -1,4 +1,7 @@
 ﻿using AccessData.Models;
+using Blazored.Modal;
+using Blazored.Modal.Services;
+using HR_Helpers.Composants;
 using HR_Helpers.Data;
 using HR_Helpers.Services;
 using HR_Helpers.ViewModels;
@@ -29,8 +32,7 @@ namespace HR_Helpers.Data.ModelValidation
 		/// <see cref="INewTableViewModel.NouvelleColonne"/>
 		public ColonneModel NouvelleColonne { get; set; }
 
-		/// <see cref="INewTableViewModel.ColonneModelGrid"/>
-		public RadzenGrid<ColonneModel> ColonneModelGrid { get; set; }
+
 
 		/// <see cref="INewTableViewModel.ShowNewColonne"/>
 		public bool ShowNewColonne { get; set; }
@@ -42,24 +44,25 @@ namespace HR_Helpers.Data.ModelValidation
 		private string _saveValueType;
 		private NotificationService _notificationService;
 		private NavigationManager _navigationManager;
+		private IModalService ModalService;
 
 
 		#endregion
 
 		public NewTableViewModel(CurrentUserService userService, IDataAccess dataAccess,
-			NotificationService notification, NavigationManager navigationManager)
+			NotificationService notification, NavigationManager navigationManager,
+			IModalService modalSvc)
 		{
 			TableauModel = new TableauModelValidation();
 			TableauModel.IdTable = Guid.NewGuid();
 
 			NouvelleColonne = new ColonneModel();
-			ColonneModelGrid = new RadzenGrid<ColonneModel>();
-
 
 			CurrentUserService = userService;
 			DataService = dataAccess;
 			_notificationService = notification;
 
+			ModalService = modalSvc;
 			_navigationManager = navigationManager;
 		}
 
@@ -147,6 +150,53 @@ namespace HR_Helpers.Data.ModelValidation
 			await SaveColonne();
 		}
 
+		/// <see cref="INewTableViewModel.EditColonne(int, Guid)"/>
+		public async Task EditColonne(int idColonne, Guid idTableau)
+		{
+			try
+			{
+				var colonneSelected = TableauModel.Colonnes.FirstOrDefault(x => x.IdColonne == idColonne && x.TableId == idTableau);
+
+				var parameters = new ModalParameters();
+				parameters.Add(nameof(EditColonneComponent.Colonne), colonneSelected);
+
+				var messageForm = ModalService.Show<EditColonneComponent>("Edition", parameters);
+				var result = await messageForm.Result;
+
+				if (!result.Cancelled)
+				{
+					colonneSelected = (ColonneModel)result.Data;
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur sur l'édition d'une colonne.");
+			}
+		}
+
+		/// <see cref="INewTableViewModel.DeleteColonne(int)"/>
+		public void DeleteColonne(int idColonne)
+		{
+			try
+			{
+				// Suppression de la colonne du tableau
+				TableauModel.Colonnes.RemoveAll(x => x.IdColonne == idColonne);
+
+				// Recalcul des IdColonne pour les autres
+				var temp = TableauModel.Colonnes.Where(x => x.IdColonne > idColonne);
+				foreach (var item in temp)
+				{
+					item.IdColonne = item.IdColonne - 1;
+				}
+
+				DetermineNewId();
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex, "Erreur sur la suppression d'une colonne.");
+			}
+		}
+
 		#endregion
 
 		#region Private methods
@@ -179,9 +229,14 @@ namespace HR_Helpers.Data.ModelValidation
 
 			TableauModel.Colonnes.Add(NouvelleColonne);
 			NouvelleColonne = new ColonneModel();
+		}
 
-			if (TableauModel.Colonnes.Count > 1)
-				await ColonneModelGrid.Reload();
+		private void DetermineNewId()
+		{
+			if (TableauModel.Colonnes.Any())
+			{
+				NouvelleColonne.IdColonne = TableauModel.Colonnes.Max(x => x.IdColonne) + 1;
+			}
 		}
 
 		#endregion

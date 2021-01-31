@@ -76,5 +76,7 @@ namespace HR_Helpers.Data
 		/// <param name="value"></param>
 		/// <returns></returns>
 		Task UpdateRow(List<ValueColonne> value);
+
+		
 	}
 }

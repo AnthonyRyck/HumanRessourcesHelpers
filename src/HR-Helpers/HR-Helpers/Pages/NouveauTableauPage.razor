@@ -111,23 +111,60 @@
 				@if (ViewModel.TableauModel.Colonnes != null
 				 && ViewModel.TableauModel.Colonnes.Count > 0)
 				{
-					<RadzenGrid @ref="ViewModel.ColonneModelGrid"
-								TItem="ColonneModel"
-								Data="@ViewModel.TableauModel.Colonnes">
-						<Columns>
-							<RadzenGridColumn TItem="ColonneModel"
-											  Property="NomColonne"
-											  Title="Nom de colonne" />
+				<table class="table">
+					<thead>
+						<tr>
+							<th style="width:85px;">
+								<i>Options</i>
+							</th>
 
-							<RadzenGridColumn TItem="ColonneModel"
-											  Property="TypeData"
-											  Title="Type de donnée" />
+							<th>
+								<i>Nom de colonne</i>
+							</th>
 
-							<RadzenGridColumn TItem="ColonneModel"
-											  Property="Description"
-											  Title="Description" />
-						</Columns>
-					</RadzenGrid>
+							<th>
+								<i>Type de donnée</i>
+							</th>
+
+							<th>
+								<i>Description</i>
+							</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						@foreach (var colonne in ViewModel.TableauModel.Colonnes)
+						{
+						<tr>
+							<td>
+								<span>
+									<RadzenButton Icon="edit"
+												  Size="ButtonSize.Small"
+												  Click="@(() => ViewModel.EditColonne(colonne.IdColonne,
+																				colonne.TableId))" />
+
+									<RadzenButton ButtonStyle="ButtonStyle.Danger"
+												  Icon="close"
+												  Size="ButtonSize.Small"
+												  Click="@(() => ViewModel.DeleteColonne(colonne.IdColonne))"/>
+								</span>
+							</td>
+
+							<td>
+								@colonne.NomColonne
+							</td>
+
+							<td>
+								@colonne.TypeData
+							</td>
+
+							<td>
+								@colonne.Description
+							</td>
+						</tr>
+						}
+					</tbody>
+				</table>
 				}
 				else
 				{
