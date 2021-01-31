@@ -1,0 +1,22 @@
+﻿@inject IModalService ModalService
+
+<div>
+	<p>Etes vous sur de vouloir supprimer le tableau ?</p>
+	<p>Toutes les données liées à ce tableau seront supprimés sans pouvoir les récupérer.</p>
+
+	<button @onclick="Yes" class="btn btn-outline-danger">Supprimer</button>
+	<button @onclick="No" class="btn btn-primary">Annuler</button>
+</div>
+
+@code {
+
+	[CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; }
+
+	async Task Yes()
+	{
+		await BlazoredModal.CloseAsync();
+	}
+
+	async Task No() => await BlazoredModal.CancelAsync();
+
+}

@@ -103,10 +103,15 @@ namespace HR_Helpers.ViewModels
 		/// <see cref="ITableauViewModel.DeleteTableau"/>
 		public async Task DeleteTableau()
 		{
-			await DataAccess.DeleteTableau(TableauSelected.IdTableau);
+			var messageForm = ModalService.Show<ConfirmDeleteComponent>("Confirmation");
+			var result = await messageForm.Result;
 
-			// Revenir à la page des tableaux
-			NavigationManager.NavigateTo("/mestableaux", true);
+			if (!result.Cancelled)
+			{
+				await DataAccess.DeleteTableau(TableauSelected.IdTableau);
+				// Revenir à la page des tableaux
+				NavigationManager.NavigateTo("/mestableaux", true);
+			}
 		}
 
 		/// <see cref="ITableauViewModel.GetValueColonne(int)"/>
