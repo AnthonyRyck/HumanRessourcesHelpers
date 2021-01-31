@@ -40,6 +40,16 @@ namespace HR_Helpers
 		{
 			string connectionDb = Configuration.GetConnectionString("MySqlConnection");
 
+			string databaseAddress = Environment.GetEnvironmentVariable("database");
+			string login = Environment.GetEnvironmentVariable("login");
+			string mdp = Environment.GetEnvironmentVariable("password");
+			string dbName = Environment.GetEnvironmentVariable("dbName");
+
+			connectionDb = connectionDb.Replace("USERNAME", login)
+									.Replace("YOURPASSWORD", mdp)
+									.Replace("YOURDB", dbName)
+									.Replace("YOURDATABASE", databaseAddress);
+
 			services.AddDbContext<ApplicationDbContext>(options => options.UseMySql(connectionDb, ServerVersion.AutoDetect(connectionDb)));
 
 			services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
