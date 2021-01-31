@@ -55,22 +55,24 @@
 					<div>
 						<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).Colonnes)" />
 					</div>
+
+					@*Ajout des colonnes*@
+					<div class="hr-margin-2px-top-bottom">
+						<RadzenButton Text="Ajouter une colonne"
+									  Icon="add_circle"
+									  ButtonStyle="ButtonStyle.Primary"
+									  Click="ViewModel.OnClickAddColonne" />
+					</div>
+
+					<div class="hr-margin-2px-top-bottom">
+						<RadzenButton Text="Sauvegarder le tableau"
+									  Icon="save"
+									  ButtonType="ButtonType.Submit"
+									  ButtonStyle="ButtonStyle.Success" />
+					</div>
 				</EditForm>
 
-				@*Ajout des colonnes*@
-				<div class="hr-margin-2px-top-bottom">
-					<RadzenButton Text="Ajouter une colonne"
-								  Icon="add_circle"
-								  ButtonStyle="ButtonStyle.Primary"
-								  Click="ViewModel.OnClickAddColonne" />
-				</div>
-
-				<div class="hr-margin-2px-top-bottom">
-					<RadzenButton Text="Sauvegarder le tableau"
-								  Icon="save"
-								  ButtonType="ButtonType.Submit"
-								  ButtonStyle="ButtonStyle.Success" />
-				</div>
+				
 			</div>
 
 			<div class="col">
