@@ -18,93 +18,103 @@
 	</NotAuthorized>
 
 	<Authorized>
-		<EditForm EditContext="@ViewModel.EditContextValidation" OnValidSubmit="@ViewModel.CreateTable" Context="valideMoi">
-			<div>
-				<DataAnnotationsValidator />
-
-				<div>
-					<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).NomDuTableau)" />
-				</div>
-			</div>
-			<div class="hr-margin-2px-top-bottom">
-				<span>Nom du tableau : <input type="text" @bind-value="ViewModel.TableauModel.NomDuTableau" /></span>
-			</div>
-
-			<div>
-				<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).Description)" />
-			</div>
-			<div class="hr-margin-2px-top-bottom">
-				<RadzenTextArea Placeholder="Entrer une description..."
-								Style="width:400px"
-								@bind-Value="ViewModel.TableauModel.Description" />
-			</div>
-
-			<div>
-				<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).DateFinInscription)" />
-			</div>
-			<div class="hr-margin-2px-top-bottom">
-				Date de fin d'inscription dans le tableau :
-				<div>
-					<RadzenDatePicker @bind-Value=ViewModel.TableauModel.DateFinInscription
-									  DateFormat="d" />
-				</div>
-			</div>
-
-			<div>
-				<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).Colonnes)" />
-			</div>
-
-			@*Ajout des colonnes*@
-			<div class="hr-margin-2px-top-bottom">
-				<RadzenButton Text="Ajouter une colonne"
-							  Icon="add_circle"
-							  ButtonStyle="ButtonStyle.Primary"
-							  Click="ViewModel.OnClickAddColonne" />
-			</div>
-
-			<CustomDialog Show="@ViewModel.ShowNewColonne">
-				<div class="hr-margin-5px">
+		<div class="row">
+			<div class="col">
+				<EditForm EditContext="@ViewModel.EditContextValidation" OnValidSubmit="@ViewModel.CreateTable" Context="valideMoi">
 					<div>
-						<div class="hr-margin-2px-top-bottom">Nom de colonne : <input type="text" @bind-value="ViewModel.NouvelleColonne.NomColonne" /></div>
-						<div class="hr-margin-2px-top-bottom">Description : <input type="text" @bind-value="ViewModel.NouvelleColonne.Description" /></div>
-						<div class="hr-margin-2px-top-bottom">
-							Type de donnée : <select @onchange="@(e =>  ViewModel.OnChangeDataType(e))">
-								<option></option>
-								<option value="text">Texte</option>
-								<option value="date">Date</option>
-								<option value="number">Nombre</option>
-								<option value="email">Email</option>
-							</select>
-						</div>
+						<DataAnnotationsValidator />
 
 						<div>
+							<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).NomDuTableau)" />
+						</div>
+					</div>
+					<div class="hr-margin-2px-top-bottom">
+						<span>Nom du tableau : <input type="text" @bind-value="ViewModel.TableauModel.NomDuTableau" /></span>
+					</div>
+
+					<div>
+						<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).Description)" />
+					</div>
+					<div class="hr-margin-2px-top-bottom">
+						<RadzenTextArea Placeholder="Entrer une description..."
+										Style="width:400px"
+										@bind-Value="ViewModel.TableauModel.Description" />
+					</div>
+
+					<div>
+						<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).DateFinInscription)" />
+					</div>
+					<div class="hr-margin-2px-top-bottom">
+						Date de fin d'inscription dans le tableau :
+						<div>
+							<RadzenDatePicker @bind-Value=ViewModel.TableauModel.DateFinInscription
+											  DateFormat="d" />
+						</div>
+					</div>
+
+					<div>
+						<ValidationMessage For="@(() => ((TableauModelValidation)ViewModel.EditContextValidation.Model).Colonnes)" />
+					</div>
+				</EditForm>
+
+				@*Ajout des colonnes*@
+				<div class="hr-margin-2px-top-bottom">
+					<RadzenButton Text="Ajouter une colonne"
+								  Icon="add_circle"
+								  ButtonStyle="ButtonStyle.Primary"
+								  Click="ViewModel.OnClickAddColonne" />
+				</div>
+
+				<div class="hr-margin-2px-top-bottom">
+					<RadzenButton Text="Sauvegarder le tableau"
+								  Icon="save"
+								  ButtonType="ButtonType.Submit"
+								  ButtonStyle="ButtonStyle.Success" />
+				</div>
+			</div>
+
+			<div class="col">
+				@if (@ViewModel.ShowNewColonne)
+				{
+					<div class="hr-margin-5px hrhelpers-border hr-box-shadow-grey">
+						<h3 class="hr-text-align-center">Nouvelle colonne</h3>
+
+						<div class="hr-padding-10px">
+							<div class="hr-margin-2px-top-bottom">Nom de colonne : <input type="text" @bind-value="ViewModel.NouvelleColonne.NomColonne" /></div>
+							<div class="hr-margin-2px-top-bottom">Description : <input type="text" @bind-value="ViewModel.NouvelleColonne.Description" /></div>
 							<div class="hr-margin-2px-top-bottom">
-								<RadzenButton Text="Enregistrer et nouvelle colonne"
-											  Click="ViewModel.SaveAndNewColonne" />
+								Type de donnée : <select @onchange="@(e =>  ViewModel.OnChangeDataType(e))">
+									<option></option>
+									<option value="text">Texte</option>
+									<option value="date">Date</option>
+									<option value="number">Nombre</option>
+									<option value="email">Email</option>
+								</select>
 							</div>
 
-							<div class="hr-margin-2px-top-bottom">
-								<RadzenButton Text="Enregistrer et Terminer"
-											  ButtonStyle="ButtonStyle.Info"
-											  Click="ViewModel.CloseAndSaveNewColonne" />
-							</div>
+							<div>
+								<div class="hr-margin-2px-top-bottom">
+									<RadzenButton Text="Enregistrer et nouvelle colonne"
+												  Click="ViewModel.SaveAndNewColonne" />
+								</div>
 
-							<div class="hr-margin-2px-top-bottom">
-								<RadzenButton Text="Terminer"
-											  ButtonStyle="ButtonStyle.Light"
-											  Click="ViewModel.CloseNewColonne" />
+								<div class="hr-margin-2px-top-bottom">
+									<RadzenButton Text="Enregistrer et Terminer"
+												  ButtonStyle="ButtonStyle.Info"
+												  Click="ViewModel.CloseAndSaveNewColonne" />
+								</div>
+
+								<div class="hr-margin-2px-top-bottom">
+									<RadzenButton Text="Terminer"
+												  ButtonStyle="ButtonStyle.Light"
+												  Click="ViewModel.CloseNewColonne" />
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-			</CustomDialog>
-
-			<div class="hr-margin-2px-top-bottom">
-				<RadzenButton Text="Sauvegarder le tableau"
-							  Icon="save"
-							  ButtonType="ButtonType.Submit"
-							  ButtonStyle="ButtonStyle.Success" />
+				}
 			</div>
+		</div>
 
 			@*Affichage des colonnes*@
 			<div class="hr-margin-2px-top-bottom">
@@ -174,7 +184,7 @@
 				}
 
 			</div>
-		</EditForm>
+		
 
 	</Authorized>
 </AuthorizeView>
