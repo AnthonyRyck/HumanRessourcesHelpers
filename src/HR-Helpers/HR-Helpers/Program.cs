@@ -1,3 +1,4 @@
+using AccessData;
 using HR_Helpers.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -42,9 +43,14 @@ namespace HR_Helpers
 					var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 					var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
+					var sqlContext = scope.ServiceProvider.GetRequiredService<SqlContextAccess>();
+
 					if (db.Database.EnsureCreated())
 					{
 						DataInitializer.InitData(roleManager, userManager).Wait();
+
+						// créer le reste de la base
+						DataInitializer.CreateTables(sqlContext).Wait();
 					}
 				}
 

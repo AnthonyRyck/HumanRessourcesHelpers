@@ -40,10 +40,10 @@ namespace HR_Helpers
 		{
 			string connectionDb = Configuration.GetConnectionString("MySqlConnection");
 
-			string databaseAddress = Environment.GetEnvironmentVariable("database");
-			string login = Environment.GetEnvironmentVariable("login");
-			string mdp = Environment.GetEnvironmentVariable("password");
-			string dbName = Environment.GetEnvironmentVariable("dbName");
+			string databaseAddress = Environment.GetEnvironmentVariable("DB_HOST");
+			string login = Environment.GetEnvironmentVariable("LOGIN_DB");
+			string mdp = Environment.GetEnvironmentVariable("PASSWORD_DB");
+			string dbName = Environment.GetEnvironmentVariable("DB_NAME");
 
 			connectionDb = connectionDb.Replace("USERNAME", login)
 									.Replace("YOURPASSWORD", mdp)

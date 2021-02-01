@@ -5,10 +5,10 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-ENV database="YourAddressdatabase"
-ENV login="YourLogin"
-ENV password="YourPassword"
-ENV dbName="YourDbName"
+ENV DB_HOST="YourAddressdatabase"
+ENV LOGIN_DB="YourLogin"
+ENV PASSWORD_DB="YourPassword"
+ENV DB_NAME="YourDbName"
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
