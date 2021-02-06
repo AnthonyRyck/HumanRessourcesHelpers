@@ -338,6 +338,7 @@ namespace AccessData
                 using (var reader = await cmd.ExecuteReaderAsync())
                 {
                     int numeroLigne = 0;
+                    string userEncours = string.Empty;
 
                     while (reader.Read())
                     {
@@ -350,7 +351,8 @@ namespace AccessData
                             Value = reader.GetString(4)
                         };
 
-                        if (numeroLigne == 0 || numeroLigne == valeur.NumeroLigne)
+                        if ((numeroLigne == 0 || numeroLigne == valeur.NumeroLigne)
+                        && (string.IsNullOrEmpty(userEncours) || userEncours == valeur.IdUser))
                         {
                             uneLigne.Add(valeur);
                         }
@@ -365,6 +367,7 @@ namespace AccessData
                         }
 
                         numeroLigne = valeur.NumeroLigne;
+                        userEncours = valeur.IdUser;
                     }
 
                     // Comme pas d'autre numéro de ligne, j'ajoute les enregistrements.

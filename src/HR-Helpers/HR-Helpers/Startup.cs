@@ -20,6 +20,7 @@ using Microsoft.Extensions.Hosting;
 using Radzen;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -116,6 +117,13 @@ namespace HR_Helpers
 				endpoints.MapBlazorHub();
 				endpoints.MapFallbackToPage("/_Host");
 			});
+
+			// Pour forcer l'application en Français.
+			var cultureInfo = new CultureInfo("fr-Fr");
+			cultureInfo.NumberFormat.CurrencySymbol = "€";
+
+			CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+			CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 		}
 	}
 }
