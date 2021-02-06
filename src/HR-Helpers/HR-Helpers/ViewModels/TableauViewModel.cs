@@ -246,6 +246,9 @@ namespace HR_Helpers.ViewModels
 					value = item.Where(y => y.NumeroLigne == numeroLigne
 									&& y.IdUser == idUser
 									&& y.IdTableau == idTableau).ToList();
+
+					if (value.Count > 0)
+						break;
 				}
 
 				var parameters = new ModalParameters();

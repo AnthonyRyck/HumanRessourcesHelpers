@@ -115,15 +115,15 @@
 						<i>Options</i>
 					</th>
 					@foreach (var colonne in ViewModel.TableauSelected.Colonnes)
-						{
-					<th>@colonne.NomColonne</th>
-						}
+					{
+						<th>@colonne.NomColonne</th>
+					}
 				</tr>
 			</thead>
 
 			<tbody>
 				@foreach (var data in ViewModel.ToutesLesEntrees)
-					{
+				{
 				<tr>
 					<td>
 						<span>
@@ -142,11 +142,11 @@
 						</span>
 					</td>
 					@foreach (var item in data)
-							{
-					<td>@item.Value</td>
-							}
-				</tr>
+					{
+						<td>@item.Value</td>
 					}
+				</tr>
+				}
 			</tbody>
 		</table>
 	</div>
