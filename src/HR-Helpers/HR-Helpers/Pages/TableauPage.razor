@@ -8,8 +8,18 @@
 
 <h3>Tableau</h3>
 
-@if (ViewModel.TableauSelected != null)
-{
+<AuthorizeView>
+	<NotAuthorized>
+		<div>Vous devez disposer d'un compte, où vous connecter.</div>
+		<div><a href="/Identity/Account/Register">Inscription</a></div>
+		<div><a href="/Identity/Account/Login">Connexion</a></div>
+	</NotAuthorized>
+	
+	
+	<Authorized>
+
+	@if (ViewModel.TableauSelected != null)
+	{
 	<RadzenCard>
 		<div>
 			<div><u>Nom du tableau</u> : </div>
@@ -27,63 +37,64 @@
 						  ButtonStyle="ButtonStyle.Info"
 						  Click="ViewModel.OpenDialog"
 						  Disabled="ViewModel.IsOutDated"
-						  Style="color: black"/>
+						  Style="color: black" />
 
 			@if (ViewModel.IsUserProprietaire)
-			{
-				<RadzenButton Text="Export en Excel"
+				{
+			<RadzenButton Text="Export en Excel"
+						  class="hr-margin-5px-left"
+						  ButtonStyle="ButtonStyle.Light"
+						  Click="ViewModel.ExportToExcel" />
+
+			<div style="float: right;">
+				<RadzenButton Text="Supprimer le tableau"
 							  class="hr-margin-5px-left"
-							  ButtonStyle="ButtonStyle.Light"
-							  Click="ViewModel.ExportToExcel" />
+							  ButtonStyle="ButtonStyle.Danger"
+							  Click="ViewModel.DeleteTableau" />
 
-				<div style="float: right;">
-					<RadzenButton Text="Supprimer le tableau"
-								  class="hr-margin-5px-left"
-								  ButtonStyle="ButtonStyle.Danger"
-								  Click="ViewModel.DeleteTableau" />
-
-				</div>
-			}
+			</div>
+				}
 		</div>
 	</RadzenCard>
 
-	//Affichage de la boite de dialog  pour ajouter une entrée
+		//Affichage de la boite de dialog  pour ajouter une entrée
 	<div>
 		<CustomDialog Show="ViewModel.ShowNouvelleEntree">
 			<div class="hr-margin-5px">
 				<div>
 					@foreach (var item in ViewModel.TableauSelected.Colonnes)
-					{
+						{
 					<div class="hr-margin-2px-top-bottom">
 
 						@switch (item.TypeData)
-						{
-							case "number":
-								<span><u>@item.NomColonne</u> : <input type="number"
-																		@onchange="@(e => ViewModel.OnChangeNumber(e, item.IdColonne))" /> 
-										<span>@item.Description</span>
-								</span>
-								break;
+								{
+									case "number":
+						<span>
+							<u>@item.NomColonne</u> : <input type="number"
+											   @onchange="@(e => ViewModel.OnChangeNumber(e, item.IdColonne))" />
+							<span>@item.Description</span>
+						</span>
+										break;
 
-							case "date":
-								<span>
-									<u>@item.NomColonne</u> : <input type="date"
-														 @onchange="@(e => ViewModel.OnChangeDate(e, item.IdColonne))"
-														 format-value="dd/MM/yyyy" />
+									case "date":
+						<span>
+							<u>@item.NomColonne</u> : <input type="date"
+											   @onchange="@(e => ViewModel.OnChangeDate(e, item.IdColonne))"
+											   format-value="dd/MM/yyyy" />
 
-									<span>@item.Description</span>
-								</span>
-								break;
+							<span>@item.Description</span>
+						</span>
+										break;
 
-							default:
-								<span>
-									<u>@item.NomColonne</u> : <input type="@item.TypeData" @bind-value="ViewModel.GetValueColonne(item.IdColonne).Value" />
-									<span>@item.Description</span>
-								</span>
-								break;
-						}
+									default:
+						<span>
+							<u>@item.NomColonne</u> : <input type="@item.TypeData" @bind-value="ViewModel.GetValueColonne(item.IdColonne).Value" />
+							<span>@item.Description</span>
+						</span>
+										break;
+								}
 					</div>
-					}
+						}
 				</div>
 
 				<div class="hr-margin-5px">
@@ -95,7 +106,7 @@
 		</CustomDialog>
 	</div>
 
-	// Tableau contenant toutes les entrées
+		// Tableau contenant toutes les entrées
 	<div>
 		<table class="table">
 			<thead>
@@ -104,58 +115,60 @@
 						<i>Options</i>
 					</th>
 					@foreach (var colonne in ViewModel.TableauSelected.Colonnes)
-					{
-						<th>@colonne.NomColonne</th>
-					}
+						{
+					<th>@colonne.NomColonne</th>
+						}
 				</tr>
 			</thead>
 
 			<tbody>
 				@foreach (var data in ViewModel.ToutesLesEntrees)
-				{
-					<tr>
-						<td > 
-							<span>
-								<RadzenButton Icon="edit"
-											  Size="ButtonSize.Small"
-											  Click="@(() => ViewModel.EditRow(data.FirstOrDefault().IdTableau,
+					{
+				<tr>
+					<td>
+						<span>
+							<RadzenButton Icon="edit"
+										  Size="ButtonSize.Small"
+										  Click="@(() => ViewModel.EditRow(data.FirstOrDefault().IdTableau,
 																				data.FirstOrDefault().IdUser,
-																				data.FirstOrDefault().NumeroLigne))"/>
+																				data.FirstOrDefault().NumeroLigne))" />
 
-								<RadzenButton ButtonStyle="ButtonStyle.Danger"
-											  Icon="close"
-											  Size="ButtonSize.Small"
-											  Click="@(() => ViewModel.DeleteRow(data.FirstOrDefault().IdTableau,
+							<RadzenButton ButtonStyle="ButtonStyle.Danger"
+										  Icon="close"
+										  Size="ButtonSize.Small"
+										  Click="@(() => ViewModel.DeleteRow(data.FirstOrDefault().IdTableau,
 																				data.FirstOrDefault().IdUser,
-																				data.FirstOrDefault().NumeroLigne))"/>
-							</span>
-						</td>
-						@foreach (var item in data)
-						{
-							<td>@item.Value</td>
-						}
-					</tr>
-				}
+																				data.FirstOrDefault().NumeroLigne))" />
+						</span>
+					</td>
+					@foreach (var item in data)
+							{
+					<td>@item.Value</td>
+							}
+				</tr>
+					}
 			</tbody>
 		</table>
 	</div>
 
-}
-else
-{
-	<div>Chargement des informations du tableau.</div>
-}
-
-
-@code {
-
-	[Parameter]
-	public string IdTableau { get; set; }
-
-	protected async override Task OnParametersSetAsync()
+	}
+	else
 	{
-		await ViewModel.LoadTableau(IdTableau);
+	<div>Chargement des informations du tableau.</div>
 	}
 
-	[CascadingParameter] public IModalService Modal { get; set; }
-}
+	</Authorized>
+</AuthorizeView>
+
+	@code {
+
+		[Parameter]
+		public string IdTableau { get; set; }
+
+		protected async override Task OnParametersSetAsync()
+		{
+			await ViewModel.LoadTableau(IdTableau);
+		}
+
+		[CascadingParameter] public IModalService Modal { get; set; }
+	}
