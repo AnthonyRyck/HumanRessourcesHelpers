@@ -10,9 +10,24 @@ namespace AccessData.Models
 
 		public string IdUser { get; set; }
 
-		public string NomDuTableau { get; set; }
+		
+		public string NomDuTableau
+		{
+			get { return _nomDuTableau; }
+			set { _nomDuTableau = value.Replace("'", "’"); }
+		}
+		private string _nomDuTableau;
 
-		public string Description { get; set; } = string.Empty;
+
+
+		public string Description
+		{
+			get { return _description; }
+			set { _description = value.Replace("'", "’"); }
+		}
+		private string _description;
+
+
 
 		public DateTime DateFinInscription { get; set; }
 

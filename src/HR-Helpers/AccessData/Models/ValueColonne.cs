@@ -14,7 +14,12 @@ namespace AccessData.Models
 
 		public string IdUser { get; set; }
 
-		public string Value { get; set; }
+		public string Value
+		{
+			get { return _value; }
+			set { _value = value.Replace("'", "’"); }
+		}
+		private string _value;
 
 	}
 }
